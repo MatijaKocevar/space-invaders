@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const context = canvas.getContext('2d');
 
         const canvasWidth = 600;
-        const canvasHeight = 600;
+        const canvasHeight = 290;
 
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
@@ -39,13 +39,13 @@ const handleReset = () => {
         if (canvas) {
             const context = canvas.getContext('2d');
 
-            const canvasWidth = 600;
-            const canvasHeight = 600;
-
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-
             if (context) {
+                game = new Game({
+                    context,
+                    width: canvas.width,
+                    height: canvas.height,
+                });
+
                 animate();
             }
         }
@@ -56,6 +56,9 @@ const animate = () => {
     game?.update();
     game?.draw();
 
+    if (game?.gameOver) {
+        game?.drawGameOver();
+        return;
+    }
     requestAnimationFrame(animate);
-    if (game?.gameOver) game?.drawGameOver();
 };
