@@ -19,7 +19,7 @@ export class Defender {
     reload = false;
     image: HTMLImageElement;
     explosionImage: HTMLImageElement;
-    lives = 1;
+    lives = 3;
     previousAnimationSpeed = 0;
     isCollided = false;
     collisionPause = 0;
@@ -33,7 +33,7 @@ export class Defender {
         this.width = 42;
         this.height = 40;
         this.x = 50;
-        this.y = this.game.props.height - (this.height + 10);
+        this.y = this.game.props.gameHeight - (this.height + 10);
         this.speed = 0;
         this.maxSpeed = 5;
         this.image = new Image();
@@ -46,46 +46,67 @@ export class Defender {
     }
 
     update = () => {
-        const { inputHandler } = this.game;
+        if (this.checkGameOver()) return;
 
+        this.animateFrame();
+        this.handleHorizontalMovement();
+        this.handleShooting();
+        this.preventGoingOffScreen();
+    };
+
+    checkGameOver = () => {
         if (this.lives === 0) {
             this.game.gameOverMessage = 'An invader shot you! You Lose!';
             this.game.setGameOver(true);
-
             this.game.inputHandler.destroy();
             // this.game.props.setShowPopupScore(true);
-            return;
+            return true;
         }
+        return false;
+    };
 
+    animateFrame = () => {
         if (this.game.gameFrame % 10 === 0) {
-            this.frame > 0 ? (this.frame = 0) : this.frame++;
+            this.frame = this.frame > 0 ? 0 : 1;
+        }
+    };
+
+    handleHorizontalMovement = () => {
+        const { inputHandler } = this.game;
+
+        if (inputHandler.keys.includes('KeyD')) {
+            this.speed = this.maxSpeed;
+        } else if (inputHandler.keys.includes('KeyA')) {
+            this.speed = -this.maxSpeed;
+        } else {
+            this.speed = 0;
         }
 
-        if (!this.isCollided) {
-            //horizontal movement
-            this.x += this.speed;
-            if (inputHandler.keys.includes('KeyD')) this.speed = this.maxSpeed;
-            else if (inputHandler.keys.includes('KeyA'))
-                this.speed = -this.maxSpeed;
-            else this.speed = 0;
+        this.x += this.speed;
+    };
 
-            if (
-                inputHandler.keys.includes('Enter') &&
-                this.game.projectiles.defender.length == 0
-            ) {
-                if (!this.reload) {
-                    this.game.projectiles.defender.push(this.fire());
-                    this.reload = true;
-                    this.timeout = setTimeout(() => {
-                        this.reload = false;
-                    }, 200);
-                }
+    handleShooting = () => {
+        const { inputHandler } = this.game;
+
+        if (
+            inputHandler.keys.includes('Enter') &&
+            this.game.projectiles.defender.length === 0
+        ) {
+            if (!this.reload) {
+                this.game.projectiles.defender.push(this.fire());
+                this.reload = true;
+                this.timeout = setTimeout(() => {
+                    this.reload = false;
+                }, 200);
             }
+        }
+    };
 
-            //dont allow defender to go off screen
-            if (this.x < 0) this.x = 0;
-            if (this.x > this.game.props.width - this.width)
-                this.x = this.game.props.width - this.width;
+    preventGoingOffScreen = () => {
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > this.game.props.gameWidth - this.width) {
+            this.x = this.game.props.gameWidth - this.width;
         }
     };
 
@@ -147,7 +168,7 @@ export class Defender {
         if (
             projectiles.invader.some(
                 (projectile) =>
-                    projectile.props.y > this.game.props.height - 500
+                    projectile.props.y > this.game.props.gameHeight - 500
             )
         ) {
             projectiles.invader.forEach((projectile) => {
@@ -157,11 +178,13 @@ export class Defender {
                     width: pW,
                     height: pH,
                 } = projectile.props;
+
                 const collided =
                     pX < this.x + this.width &&
                     pX + pW > this.x &&
                     pY < this.y + 17 + (this.height - 23) &&
                     pY + pH > this.y + 17;
+
                 if (collided) {
                     if (this.lives > 0) {
                         this.isCollided = true;
