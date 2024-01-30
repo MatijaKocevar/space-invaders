@@ -179,7 +179,9 @@ export class ShieldBlock {
             projectiles.invader.some(
                 (projectile) => projectile.props.y > 400
             ) ||
-            game.invaders.alive.some((invader) => invader.props.y > 400)
+            game.invaders.livingInvaders.some(
+                (invader) => invader.props.y > 400
+            )
         ) {
             this.particles.forEach((particle, i) => {
                 projectiles.defender.forEach((projectile, d) => {
@@ -246,7 +248,7 @@ export class ShieldBlock {
                     }
                 });
 
-                game.invaders.alive.forEach((invader) => {
+                game.invaders.livingInvaders.forEach((invader) => {
                     if (!particle.active) return;
 
                     if (this.isInvaderCollided(particle, invader)) {
@@ -323,7 +325,7 @@ export class Shields {
 
     constructor({ game }: IShields) {
         this.props = { game };
-        this.createShields(game.props.width);
+        this.createShields(game.props.gameWidth);
     }
 
     createShields = (width: number) => {

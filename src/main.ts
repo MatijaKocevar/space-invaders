@@ -1,7 +1,7 @@
 import { Game } from './components/Game';
 import './style.css';
 
-let game: Game | undefined = undefined;
+let game: Game | undefined;
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (context) {
             game = new Game({
                 context,
-                width: canvasWidth,
-                height: canvasHeight,
+                gameWidth: canvasWidth,
+                gameHeight: canvasHeight,
             });
 
             animate();
@@ -39,13 +39,13 @@ const handleReset = () => {
         if (canvas) {
             const context = canvas.getContext('2d');
 
-            const canvasWidth = 600;
-            const canvasHeight = 600;
-
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-
             if (context) {
+                game = new Game({
+                    context,
+                    gameWidth: canvas.width,
+                    gameHeight: canvas.height,
+                });
+
                 animate();
             }
         }
@@ -56,6 +56,9 @@ const animate = () => {
     game?.update();
     game?.draw();
 
+    if (game?.gameOver) {
+        game?.drawGameOver();
+        return;
+    }
     requestAnimationFrame(animate);
-    if (game?.gameOver) game?.drawGameOver();
 };

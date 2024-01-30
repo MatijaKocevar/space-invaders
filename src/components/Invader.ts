@@ -128,7 +128,7 @@ export class Invaders {
     invader2_3 = new Image();
     invader3_4 = new Image();
     animationSpeed = 70;
-    alive: Invader[] = [];
+    livingInvaders: Invader[] = [];
     speed = 5;
     currentDirection: 'left' | 'right';
     moveSounds: { [key: string]: HTMLAudioElement };
@@ -153,10 +153,13 @@ export class Invaders {
     updateDirection = () => {
         const { game } = this.props;
 
-        const hitLeftWall = this.alive.some((invader) => invader.props.x <= 5);
-        const hitRightWall = this.alive.some(
+        const hitLeftWall = this.livingInvaders.some(
+            (invader) => invader.props.x <= 5
+        );
+        const hitRightWall = this.livingInvaders.some(
             (invader) =>
-                invader.props.x + invader.props.width + 5 >= game.props.width
+                invader.props.x + invader.props.width + 5 >=
+                game.props.gameWidth
         );
 
         if (hitLeftWall) {
@@ -235,12 +238,12 @@ export class Invaders {
             }
         }
 
-        this.alive = invaders;
+        this.livingInvaders = invaders;
     };
 
     updateInvaders = (gameFrame: number) => {
         const { game } = this.props;
-        const invadersArrayLength = this.alive.length;
+        const invadersArrayLength = this.livingInvaders.length;
         let speedChanged = false;
 
         if (this.animationSpeed > 0) {
@@ -292,7 +295,7 @@ export class Invaders {
             }
 
             if (speedChanged) {
-                this.alive.forEach((invader) => {
+                this.livingInvaders.forEach((invader) => {
                     invader.props.speed = this.speed;
                     invader.props.animationSpeed = this.animationSpeed;
                 });
@@ -301,9 +304,12 @@ export class Invaders {
         }
 
         // Update the invader direction and position
-        if (this.alive.length > 0 && gameFrame % this.animationSpeed === 0) {
+        if (
+            this.livingInvaders.length > 0 &&
+            gameFrame % this.animationSpeed === 0
+        ) {
             this.updateDirection();
-            this.alive.forEach((invader) => {
+            this.livingInvaders.forEach((invader) => {
                 invader.updateInvader(this.currentDirection);
             });
 
@@ -314,16 +320,23 @@ export class Invaders {
                 this.moveSounds[this.moveCount.toString()].play();
         }
 
-        // Fire a projectile if the invader is alive and the game frame is a multiple of the animation speed
-        if (this.alive.length > 0 && gameFrame % this.animationSpeed === 0) {
-            const randomInvader = Math.floor(Math.random() * this.alive.length);
+        // Fire a projectile if the invader is livingInvaders and the game frame is a multiple of the animation speed
+        if (
+            this.livingInvaders.length > 0 &&
+            gameFrame % this.animationSpeed === 0
+        ) {
+            const randomInvader = Math.floor(
+                Math.random() * this.livingInvaders.length
+            );
 
             if (gameFrame % 25 === 0 && game.projectiles.invader.length < 3) {
-                game.projectiles.invader.push(this.alive[randomInvader].fire());
+                game.projectiles.invader.push(
+                    this.livingInvaders[randomInvader].fire()
+                );
             }
         }
 
-        if (this.alive.some((invader) => invader.props.y > 550)) {
+        if (this.livingInvaders.some((invader) => invader.props.y > 550)) {
             game.setGameOverMessage(
                 'Invaders have reached the ground! You lose!'
             );
@@ -333,7 +346,7 @@ export class Invaders {
             // game.props.setShowPopupScore(true);
         }
 
-        if (this.alive.length === 0) {
+        if (this.livingInvaders.length === 0) {
             // game.setGameOverMessage("You win!");
             // game.setGameOver(true);
 
@@ -341,7 +354,7 @@ export class Invaders {
             this.animationSpeed = 35;
 
             game.shields.shieldArray = [];
-            game.shields.createShields(game.props.width);
+            game.shields.createShields(game.props.gameWidth);
 
             game.invaders.createInvaders();
         }
@@ -353,7 +366,7 @@ export class Invaders {
         const { game } = this.props;
 
         // Check if any of the invaders have been hit by a projectile
-        this.alive.forEach((invader, i) => {
+        this.livingInvaders.forEach((invader, i) => {
             game.projectiles.defender.forEach((projectile, p) => {
                 if (
                     projectile.props.x > invader.props.x &&
@@ -376,14 +389,18 @@ export class Invaders {
             invadersToRemove.length > 0
         ) {
             for (let i = invadersToRemove.length - 1; i >= 0; i--) {
-                const invaderX = this.alive[invadersToRemove[i].index].props.x;
-                const invaderY = this.alive[invadersToRemove[i].index].props.y;
+                const invaderX =
+                    this.livingInvaders[invadersToRemove[i].index].props.x;
+                const invaderY =
+                    this.livingInvaders[invadersToRemove[i].index].props.y;
 
                 game.explosions.add(invaderX, invaderY);
 
                 if (game.playSound)
-                    this.alive[invadersToRemove[i].index].invaderDeath.play();
-                this.alive.splice(invadersToRemove[i].index, 1);
+                    this.livingInvaders[
+                        invadersToRemove[i].index
+                    ].invaderDeath.play();
+                this.livingInvaders.splice(invadersToRemove[i].index, 1);
             }
 
             for (let i = playerProjectilesToRemove.length - 1; i >= 0; i--) {
@@ -396,11 +413,11 @@ export class Invaders {
     };
 
     draw = () => {
-        this.alive.forEach((invader) => invader.draw());
+        this.livingInvaders.forEach((invader) => invader.draw());
     };
 
     destroy = () => {
         this.invadersCount = 0;
-        this.alive = [];
+        this.livingInvaders = [];
     };
 }

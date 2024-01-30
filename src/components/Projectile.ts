@@ -69,7 +69,7 @@ export class Projectiles {
     }
 
     checkOutOfBounds = () => {
-        const { height } = this.props.game.props;
+        const { gameHeight } = this.props.game.props;
         this.defenderProjectilesToRemove = [];
         this.invaderProjectilesToRemove = [];
 
@@ -82,7 +82,7 @@ export class Projectiles {
 
         // Chech if invaderProjectiles go off the screen
         this.invader.forEach((projectile, i) => {
-            if (projectile.props.y > height) {
+            if (projectile.props.y > gameHeight) {
                 this.invaderProjectilesToRemove.push({ index: i });
             }
         });
