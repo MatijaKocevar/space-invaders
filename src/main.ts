@@ -1,4 +1,4 @@
-import { Game } from './components/Game';
+import { Game } from './classes/Game/Game';
 import './style.css';
 
 let game: Game | undefined;
@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const handleReset = () => {
-    if (game?.gameOver) {
-        game.setGameOver(false);
+    if (game?.gameService.isGameOver) {
+        game.gameService.setGameOver(false);
 
         const canvas = document.querySelector(
             '#game-canvas'
@@ -56,8 +56,8 @@ const animate = () => {
     game?.update();
     game?.draw();
 
-    if (game?.gameOver) {
-        game?.drawGameOver();
+    if (game?.gameService.isGameOver) {
+        game?.gameService.drawGameOver();
         return;
     }
     requestAnimationFrame(animate);

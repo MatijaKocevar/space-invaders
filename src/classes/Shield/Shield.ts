@@ -1,27 +1,15 @@
-import { Game } from './Game';
-import { Invader } from './Invader';
-import { Projectile, Projectiles } from './Projectile';
+import { Invader } from '../Invader/Invader';
+import { Projectile } from '../Projectile/Projectile';
+import { Projectiles } from '../Projectile/Projectiles';
+import { IParticle } from './entities/IParticle.interface';
+import { IShield } from './entities/IShield.interface';
 
-interface IShieldBlock {
-    x: number;
-    y: number;
-    game: Game;
-}
-
-interface IParticle {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    active: boolean;
-}
-
-export class ShieldBlock {
-    props: IShieldBlock;
+export class Shield {
+    props: IShield;
     particles: IParticle[] = [];
 
-    constructor({ x, y, game }: IShieldBlock) {
-        this.props = { x, y, game };
+    constructor(props: IShield) {
+        this.props = props;
         this.particles = this.getShape();
     }
 
@@ -166,8 +154,7 @@ export class ShieldBlock {
         const { game } = this.props;
         const playerProjectilesToRemove: { index: number }[] = [];
         const invaderProjectilesToRemove: { index: number }[] = [];
-        const shieldBlocksToRemove: { index: number; shieldIndex: number }[] =
-            [];
+        const shieldsToRemove: { index: number; shieldIndex: number }[] = [];
         const particlesToRemove: number[] = [];
         const explosionRadius = 2;
         const explosionChance = 0.5;
@@ -189,7 +176,7 @@ export class ShieldBlock {
 
                     if (this.isProjectileCollided(particle, projectile)) {
                         playerProjectilesToRemove.push({ index: d });
-                        shieldBlocksToRemove.push({
+                        shieldsToRemove.push({
                             index: i,
                             shieldIndex: index,
                         });
@@ -205,7 +192,7 @@ export class ShieldBlock {
                                 ) <= explosionRadius
                             ) {
                                 if (Math.random() < explosionChance) {
-                                    shieldBlocksToRemove.push({
+                                    shieldsToRemove.push({
                                         index: j,
                                         shieldIndex: index,
                                     });
@@ -221,7 +208,7 @@ export class ShieldBlock {
 
                     if (this.isProjectileCollided(particle, projectile)) {
                         invaderProjectilesToRemove.push({ index: p });
-                        shieldBlocksToRemove.push({
+                        shieldsToRemove.push({
                             index: i,
                             shieldIndex: index,
                         });
@@ -237,7 +224,7 @@ export class ShieldBlock {
                             ) {
                                 // Check if the particle is within the explosion radius
                                 if (Math.random() < explosionChance) {
-                                    shieldBlocksToRemove.push({
+                                    shieldsToRemove.push({
                                         index: j,
                                         shieldIndex: index,
                                     });
@@ -252,7 +239,7 @@ export class ShieldBlock {
                     if (!particle.active) return;
 
                     if (this.isInvaderCollided(particle, invader)) {
-                        shieldBlocksToRemove.push({
+                        shieldsToRemove.push({
                             index: i,
                             shieldIndex: index,
                         });
@@ -268,7 +255,7 @@ export class ShieldBlock {
                             ) {
                                 // Check if the particle is within the explosion radius
                                 if (Math.random() < explosionChance) {
-                                    shieldBlocksToRemove.push({
+                                    shieldsToRemove.push({
                                         index: j,
                                         shieldIndex: index,
                                     });
@@ -284,7 +271,7 @@ export class ShieldBlock {
         if (
             playerProjectilesToRemove.length > 0 ||
             invaderProjectilesToRemove.length > 0 ||
-            shieldBlocksToRemove.length > 0 ||
+            shieldsToRemove.length > 0 ||
             particlesToRemove.length > 0
         ) {
             playerProjectilesToRemove?.forEach((projectile) =>
@@ -293,7 +280,7 @@ export class ShieldBlock {
             invaderProjectilesToRemove.forEach((projectile) =>
                 projectiles.invader.splice(projectile.index, 1)
             );
-            shieldBlocksToRemove?.forEach((block) => {
+            shieldsToRemove?.forEach((block) => {
                 this.particles[block.index].active = false;
             });
         }
@@ -312,68 +299,5 @@ export class ShieldBlock {
 
     destroy = () => {
         this.particles = [];
-    };
-}
-
-interface IShields {
-    game: Game;
-}
-
-export class Shields {
-    shieldArray: ShieldBlock[] = [];
-    props: IShields;
-
-    constructor({ game }: IShields) {
-        this.props = { game };
-        this.createShields(game.props.gameWidth);
-    }
-
-    createShields = (width: number) => {
-        const { game } = this.props;
-        const shieldWidth = 68;
-        const shieldSpacing = (width - 4 * shieldWidth) / 5; // Total spacing divided equally before and after the shields
-
-        this.shieldArray.push(
-            new ShieldBlock({ x: shieldSpacing, y: 500, game })
-        );
-        this.shieldArray.push(
-            new ShieldBlock({
-                x: shieldSpacing + shieldWidth + shieldSpacing,
-                y: 500,
-                game,
-            })
-        );
-        this.shieldArray.push(
-            new ShieldBlock({
-                x: shieldSpacing + 2 * shieldWidth + 2 * shieldSpacing,
-                y: 500,
-                game,
-            })
-        );
-        this.shieldArray.push(
-            new ShieldBlock({
-                x: shieldSpacing + 3 * shieldWidth + 3 * shieldSpacing,
-                y: 500,
-                game,
-            })
-        );
-    };
-
-    handleCollision() {
-        const projectiles = this.props.game.projectiles;
-
-        this.shieldArray.forEach((shieldBlock, s) => {
-            shieldBlock.handleCollision(projectiles, s);
-        });
-    }
-
-    draw() {
-        this.shieldArray.forEach((shield) => {
-            shield.draw();
-        });
-    }
-
-    destroy = () => {
-        this.shieldArray = [];
     };
 }

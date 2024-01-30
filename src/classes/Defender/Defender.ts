@@ -1,11 +1,9 @@
-import { Game } from './Game';
-import { Projectile } from './Projectile';
-import player from '../sprites/player.png';
-import explosion from '../sprites/defenderExplosion.png';
-import defenderDeath from '../audio/explosion.wav';
-interface IDefender {
-    game: Game;
-}
+import { Game } from '../Game/Game';
+import { Projectile } from '../Projectile/Projectile';
+import player from '../../sprites/player.png';
+import explosion from '../../sprites/defenderExplosion.png';
+import defenderDeath from '../../audio/explosion.wav';
+import { IDefender } from './entities/IDefender.interface';
 
 export class Defender {
     game: Game;
@@ -28,8 +26,8 @@ export class Defender {
     spriteHeight: number;
     defenderDeath: HTMLAudioElement;
 
-    constructor({ game }: IDefender) {
-        this.game = game;
+    constructor(props: IDefender) {
+        this.game = props.game;
         this.width = 42;
         this.height = 40;
         this.x = 50;
@@ -48,6 +46,8 @@ export class Defender {
     update = () => {
         if (this.checkGameOver()) return;
 
+        this.handleCollision();
+
         this.animateFrame();
         this.handleHorizontalMovement();
         this.handleShooting();
@@ -56,8 +56,9 @@ export class Defender {
 
     checkGameOver = () => {
         if (this.lives === 0) {
-            this.game.gameOverMessage = 'An invader shot you! You Lose!';
-            this.game.setGameOver(true);
+            this.game.gameService.gameOverMessage =
+                'An invader shot you! You Lose!';
+            this.game.gameService.setGameOver(true);
             this.game.inputHandler.destroy();
             // this.game.props.setShowPopupScore(true);
             return true;
