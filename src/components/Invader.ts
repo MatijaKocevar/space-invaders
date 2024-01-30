@@ -156,7 +156,8 @@ export class Invaders {
         const hitLeftWall = this.alive.some((invader) => invader.props.x <= 5);
         const hitRightWall = this.alive.some(
             (invader) =>
-                invader.props.x + invader.props.width + 5 >= game.props.width
+                invader.props.x + invader.props.width + 5 >=
+                game.props.gameWidth
         );
 
         if (hitLeftWall) {
@@ -341,7 +342,7 @@ export class Invaders {
             this.animationSpeed = 35;
 
             game.shields.shieldArray = [];
-            game.shields.createShields(game.props.width);
+            game.shields.createShields(game.props.gameWidth);
 
             game.invaders.createInvaders();
         }

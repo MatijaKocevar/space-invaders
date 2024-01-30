@@ -323,7 +323,7 @@ export class Shields {
 
     constructor({ game }: IShields) {
         this.props = { game };
-        this.createShields(game.props.width);
+        this.createShields(game.props.gameWidth);
     }
 
     createShields = (width: number) => {
