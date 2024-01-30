@@ -1,3 +1,4 @@
+import { drawText } from '../utils/utils';
 import { Defender } from './Defender';
 import { Explosions } from './Explosion';
 import { InputHandler } from './InputHandler';
@@ -6,8 +7,8 @@ import { Projectiles } from './Projectile';
 import { Shields } from './ShieldBlock';
 
 interface IGame {
-    width: number;
-    height: number;
+    gameWidth: number;
+    gameHeight: number;
     // mobileControls: any;
     context: CanvasRenderingContext2D;
     // setShowPopupScore: any;
@@ -27,10 +28,10 @@ export class Game {
     gameOver = false;
     playSound = false;
 
-    constructor({ height, width, context }: IGame) {
+    constructor({ gameHeight, gameWidth, context }: IGame) {
         this.props = {
-            height,
-            width,
+            gameHeight,
+            gameWidth,
             context,
         };
         this.inputHandler = new InputHandler(this);
@@ -48,51 +49,11 @@ export class Game {
         this.handleCollision();
     };
 
-    handleCollision = () => {
-        this.projectiles.checkOutOfBounds();
-        this.invaders.handleCollision();
-        this.defender.handleCollision();
-        this.shields.handleCollision();
-    };
-
-    drawHighscore = () => {
-        const { context } = this.props;
-
-        context.fillStyle = 'white';
-        context.font = 'bold 15px Arial';
-        context.textAlign = 'center';
-        context.fillText('SCORE ', 40, 20);
-
-        context.fillStyle = '#00d300';
-        context.font = 'bold 15px Arial';
-        context.textAlign = 'center';
-        context.fillText(this.score.toString(), 80, 20);
-    };
-
-    drawLives = () => {
-        const { context, width } = this.props;
-
-        context.fillStyle = 'white';
-        context.font = 'bold 15px Arial';
-        context.textAlign = 'center';
-        context.fillText(this.defender.lives.toString(), width - 80, 20);
-
-        for (let i = 0; i < this.defender.lives - 1; i++) {
-            const offset = i * 10;
-            context.drawImage(
-                this.defender.image,
-                width - 65 + i * 20 + offset,
-                3,
-                20,
-                20
-            );
-        }
-    };
-
     draw = () => {
         const { context } = this.props;
+
         this.gameFrame++;
-        context.clearRect(0, 0, this.props.width, this.props.height);
+        context.clearRect(0, 0, this.props.gameWidth, this.props.gameHeight);
 
         this.invaders.draw();
         this.defender.draw();
@@ -104,45 +65,95 @@ export class Game {
         this.drawLives();
     };
 
+    handleCollision = () => {
+        this.projectiles.checkOutOfBounds();
+        this.invaders.handleCollision();
+        this.defender.handleCollision();
+        this.shields.handleCollision();
+    };
+
+    drawHighscore = () => {
+        const { context } = this.props;
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: 'bold 15px Arial',
+            text: 'SCORE',
+            x: 40,
+            y: 20,
+        });
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: 'bold 15px Arial',
+            text: this.score.toString(),
+            x: 80,
+            y: 20,
+        });
+    };
+
+    drawLives = () => {
+        const { context, gameWidth } = this.props;
+
+        const livesText = this.defender.lives.toString();
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: 'bold 15px Arial',
+            text: livesText,
+            x: gameWidth - 80,
+            y: 20,
+        });
+
+        for (let i = 0; i < this.defender.lives - 1; i++) {
+            const lifeXpos = gameWidth - 65 + i * 30;
+            context.drawImage(this.defender.image, lifeXpos, 3, 20, 20);
+        }
+    };
+
+    drawGameOver = () => {
+        const { context, gameWidth, gameHeight } = this.props;
+
+        context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        context.fillRect(0, 0, this.props.gameWidth, this.props.gameHeight);
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: '48px Arial',
+            text: 'GAME OVER',
+            x: gameWidth / 2,
+            y: gameHeight / 2.2,
+        });
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: this.gameOverMessage === 'You win!' ? 'green' : 'red',
+            font: '24px Arial',
+            text: this.gameOverMessage ?? '',
+            x: gameWidth / 2,
+            y: gameHeight / 2.2 + 50,
+        });
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: '18px Arial',
+            text: 'Click anywhere to reset',
+            x: gameWidth / 2,
+            y: gameHeight / 2.2 + 100,
+        });
+    };
+
     setGameOver = (gameOver: boolean) => {
         this.gameOver = gameOver;
     };
 
     setGameOverMessage = (message: string) => {
         this.gameOverMessage = message;
-    };
-
-    drawGameOver = () => {
-        this.props.context.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        this.props.context.fillRect(0, 0, this.props.width, this.props.height);
-
-        this.props.context.fillStyle = 'white';
-        this.props.context.font = '48px Arial';
-        this.props.context.textAlign = 'center';
-        this.props.context.fillText(
-            'GAME OVER',
-            this.props.width / 2,
-            this.props.height / 2
-        );
-
-        this.props.context.fillStyle =
-            this.gameOverMessage === 'You win!' ? 'green' : 'red';
-        this.props.context.font = '24px Arial';
-        this.props.context.textAlign = 'center';
-        this.props.context.fillText(
-            this.gameOverMessage ?? '',
-            this.props.width / 2,
-            this.props.height / 2 + 50
-        );
-
-        this.props.context.fillStyle = 'white';
-        this.props.context.font = '18px Arial';
-        this.props.context.textAlign = 'center';
-        this.props.context.fillText(
-            'Click anywhere to reset',
-            this.props.width / 2,
-            this.props.height / 2 + 100
-        );
     };
 
     destroy = () => {
