@@ -1,4 +1,4 @@
-import { Game } from './Game';
+import { Game } from '../classes/Game/Game';
 
 export class InputHandler {
     keys: string[]; // Array to store the currently pressed keys

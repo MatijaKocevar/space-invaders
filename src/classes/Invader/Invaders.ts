@@ -1,125 +1,12 @@
-import invader1 from '../sprites/invader1.png';
-import invader2_3 from '../sprites/invader2-3.png';
-import invader3_4 from '../sprites/invader3-4.png';
-import { Game } from './Game';
-import { Projectile } from './Projectile';
-import invaderDeath from '../audio/invaderkilled.wav';
-import invaderMove0 from '../audio/invader-move-0.wav';
-import invaderMove1 from '../audio/invader-move-1.wav';
-import invaderMove2 from '../audio/invader-move-2.wav';
-import invaderMove3 from '../audio/invader-move-3.wav';
-
-interface IInvader {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    speed: number;
-    image: HTMLImageElement;
-    animationSpeed: number;
-    game: Game;
-    points: number;
-}
-
-export class Invader {
-    props: IInvader;
-    spriteWidth: number;
-    spriteHeight: number;
-    frame = 0;
-    currentDirection: 'left' | 'right' = 'right';
-    invaderDeath: HTMLAudioElement;
-
-    constructor({
-        x,
-        y,
-        width,
-        height,
-        speed,
-        image,
-        animationSpeed,
-        game,
-        points,
-    }: IInvader) {
-        this.props = {
-            x,
-            y,
-            width,
-            height,
-            speed,
-            image,
-            animationSpeed,
-            game,
-            points,
-        };
-        this.spriteWidth = 57;
-        this.spriteHeight = 38;
-        this.invaderDeath = new Audio(invaderDeath);
-    }
-
-    moveLeft = () => (this.props.x -= this.props.speed);
-
-    moveRight = () => (this.props.x += this.props.speed);
-
-    moveDown = () => (this.props.y += this.props.height);
-
-    updateInvader = (direction: 'left' | 'right') => {
-        const { gameFrame } = this.props.game;
-
-        if (this.currentDirection != direction) {
-            // Change direction and move down when the invader reaches the edge of the canvas
-            this.moveDown();
-            this.currentDirection = direction;
-            return;
-        }
-        // If the invader is not at the edge of the canvas, continue moving in the current direction
-        if (direction === 'left') this.moveLeft();
-        if (direction === 'right') this.moveRight();
-
-        // Update the frame of the invader's animation
-        if (gameFrame % this.props.animationSpeed === 0) {
-            this.frame > 0 ? (this.frame = 0) : this.frame++;
-        }
-    };
-
-    fire = () => {
-        const projectile = new Projectile({
-            height: 10,
-            width: 2,
-            speed: 10,
-            x: this.props.x + this.props.width / 2 - 2,
-            y: this.props.y,
-            color: 'white',
-            direction: 'down',
-            game: this.props.game,
-        });
-
-        return projectile;
-    };
-
-    draw = () => {
-        const { context } = this.props.game.props;
-        // Draw the invader on the canvas
-        if (this.props.image) {
-            // context.fillStyle = "red";
-            // context.fillRect(this.props.x, this.props.y, this.props.width, this.props.height);
-            context.drawImage(
-                this.props.image,
-                this.frame * this.spriteWidth,
-                0,
-                this.spriteWidth,
-                this.spriteHeight,
-                this.props.x,
-                this.props.y,
-                this.props.width,
-                this.props.height
-            );
-        }
-    };
-}
-
-interface IInvaders {
-    game: Game;
-}
+import { Invader } from './Invader';
+import invaderMove0 from '../../audio/invader-move-0.wav';
+import invaderMove1 from '../../audio/invader-move-1.wav';
+import invaderMove2 from '../../audio/invader-move-2.wav';
+import invaderMove3 from '../../audio/invader-move-3.wav';
+import invader1 from '../../sprites/invader1.png';
+import invader2_3 from '../../sprites/invader2-3.png';
+import invader3_4 from '../../sprites/invader3-4.png';
+import { IInvaders } from './entities/IInvaders.interface';
 
 export class Invaders {
     props: IInvaders;
@@ -134,8 +21,8 @@ export class Invaders {
     moveSounds: { [key: string]: HTMLAudioElement };
     moveCount = 0;
 
-    constructor({ game }: IInvaders) {
-        this.props = { game };
+    constructor(props: IInvaders) {
+        this.props = props;
         this.invader1.src = invader1;
         this.invader2_3.src = invader2_3;
         this.invader3_4.src = invader3_4;
@@ -241,13 +128,14 @@ export class Invaders {
         this.livingInvaders = invaders;
     };
 
-    updateInvaders = (gameFrame: number) => {
+    updateInvaders = () => {
+        this.handleCollision();
+
         const { game } = this.props;
         const invadersArrayLength = this.livingInvaders.length;
         let speedChanged = false;
 
         if (this.animationSpeed > 0) {
-            // Adjust the animation speed and invader speed based on the number of remaining invaders
             if (
                 invadersArrayLength < 44 &&
                 this.animationSpeed != 35 &&
@@ -306,7 +194,7 @@ export class Invaders {
         // Update the invader direction and position
         if (
             this.livingInvaders.length > 0 &&
-            gameFrame % this.animationSpeed === 0
+            game.gameFrame % this.animationSpeed === 0
         ) {
             this.updateDirection();
             this.livingInvaders.forEach((invader) => {
@@ -323,13 +211,16 @@ export class Invaders {
         // Fire a projectile if the invader is livingInvaders and the game frame is a multiple of the animation speed
         if (
             this.livingInvaders.length > 0 &&
-            gameFrame % this.animationSpeed === 0
+            game.gameFrame % this.animationSpeed === 0
         ) {
             const randomInvader = Math.floor(
                 Math.random() * this.livingInvaders.length
             );
 
-            if (gameFrame % 25 === 0 && game.projectiles.invader.length < 3) {
+            if (
+                game.gameFrame % 25 === 0 &&
+                game.projectiles.invader.length < 3
+            ) {
                 game.projectiles.invader.push(
                     this.livingInvaders[randomInvader].fire()
                 );
@@ -337,18 +228,18 @@ export class Invaders {
         }
 
         if (this.livingInvaders.some((invader) => invader.props.y > 550)) {
-            game.setGameOverMessage(
+            game.gameService.setGameOverMessage(
                 'Invaders have reached the ground! You lose!'
             );
-            game.setGameOver(true);
+            game.gameService.setGameOver(true);
 
             game.inputHandler.destroy();
             // game.props.setShowPopupScore(true);
         }
 
         if (this.livingInvaders.length === 0) {
-            // game.setGameOverMessage("You win!");
-            // game.setGameOver(true);
+            game.gameService.setGameOverMessage('You win!');
+            game.gameService.setGameOver(true);
 
             this.speed = 6;
             this.animationSpeed = 35;
@@ -378,7 +269,7 @@ export class Invaders {
                     playerProjectilesToRemove.push({ index: p });
                     invadersToRemove.push({ index: i });
 
-                    game.score += invader.props.points;
+                    game.scoreService.score += invader.props.points;
                 }
             });
         });
