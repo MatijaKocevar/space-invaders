@@ -7,11 +7,21 @@ export class Shields {
     allParticles: { [key: string]: boolean } = {};
     explosionRadius = 2;
     explosionHeight = 5;
-    explosionChance = 0.1;
+    explosionChance = 0.5;
+
+    offScreenCanvas: HTMLCanvasElement;
+    offScreenContext: CanvasRenderingContext2D | null;
 
     constructor(props: IShields) {
         this.props = props;
         this.createShields(props.game.props.gameWidth);
+
+        this.offScreenCanvas = document.createElement('canvas');
+        this.offScreenCanvas.width = 600;
+        this.offScreenCanvas.height = 600;
+        this.offScreenContext = this.offScreenCanvas.getContext('2d');
+
+        this.drawParticles();
     }
 
     createShields = (width: number) => {
@@ -67,7 +77,10 @@ export class Shields {
             const maxY = projectile.props.y + projectile.props.height;
 
             const isCollided = this.collide(minX, maxX, minY, maxY, true);
-            if (isCollided) defenderProjectilesToRemove.push({ index: i });
+            if (isCollided) {
+                defenderProjectilesToRemove.push({ index: i });
+                this.drawParticles();
+            }
         });
 
         projectiles.invader.forEach((projectile, i) => {
@@ -77,7 +90,10 @@ export class Shields {
             const maxY = projectile.props.y + projectile.props.height;
 
             const isCollided = this.collide(minX, maxX, minY, maxY, true);
-            if (isCollided) invaderProjectilesToRemove.push({ index: i });
+            if (isCollided) {
+                invaderProjectilesToRemove.push({ index: i });
+                this.drawParticles();
+            }
         });
 
         invaders.livingInvaders.forEach((invader) => {
@@ -86,7 +102,10 @@ export class Shields {
             const minY = invader.props.y;
             const maxY = invader.props.y + invader.props.height;
 
-            this.collide(minX, maxX, minY, maxY, false);
+            const isCollided = this.collide(minX, maxX, minY, maxY, false);
+            if (isCollided) {
+                this.drawParticles();
+            }
         });
 
         defenderProjectilesToRemove?.forEach((projectile) =>
@@ -143,12 +162,30 @@ export class Shields {
     draw() {
         const { context } = this.props.game.props;
 
-        Object.keys(this.allParticles).forEach((key) => {
+        context.drawImage(this.offScreenCanvas, 0, 0);
+    }
+
+    drawParticles() {
+        this.offScreenContext?.clearRect(
+            0,
+            0,
+            this.offScreenCanvas.width,
+            this.offScreenCanvas.height
+        );
+
+        Object.keys(this.allParticles).flatMap((key) => {
             if (this.allParticles[key]) {
                 const [x, y] = key.split('x');
 
-                context.fillStyle = '#00d300';
-                context.fillRect(parseInt(x), parseInt(y), 1, 1);
+                if (this.offScreenContext) {
+                    this.offScreenContext.fillStyle = '#00d300';
+                    this.offScreenContext.fillRect(
+                        parseInt(x),
+                        parseInt(y),
+                        1,
+                        1
+                    );
+                }
             }
         });
     }

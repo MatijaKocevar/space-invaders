@@ -50,6 +50,8 @@ export class Game {
         this.scoreService = new ScoreService({
             context: props.context,
         });
+
+        this.shields.draw();
     }
 
     update = () => {

@@ -136,7 +136,6 @@ export class Invaders {
         let speedChanged = false;
 
         if (this.animationSpeed > 0) {
-            // Adjust the animation speed and invader speed based on the number of remaining invaders
             if (
                 invadersArrayLength < 44 &&
                 this.animationSpeed != 35 &&
@@ -239,8 +238,8 @@ export class Invaders {
         }
 
         if (this.livingInvaders.length === 0) {
-            // game.setGameOverMessage("You win!");
-            // game.setGameOver(true);
+            game.gameService.setGameOverMessage('You win!');
+            game.gameService.setGameOver(true);
 
             this.speed = 6;
             this.animationSpeed = 35;

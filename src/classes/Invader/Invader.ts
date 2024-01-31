@@ -27,16 +27,13 @@ export class Invader {
         const { gameFrame } = this.props.game;
 
         if (this.currentDirection != direction) {
-            // Change direction and move down when the invader reaches the edge of the canvas
             this.moveDown();
             this.currentDirection = direction;
             return;
         }
-        // If the invader is not at the edge of the canvas, continue moving in the current direction
         if (direction === 'left') this.moveLeft();
         if (direction === 'right') this.moveRight();
 
-        // Update the frame of the invader's animation
         if (gameFrame % this.props.animationSpeed === 0) {
             this.frame > 0 ? (this.frame = 0) : this.frame++;
         }
@@ -59,10 +56,7 @@ export class Invader {
 
     draw = () => {
         const { context } = this.props.game.props;
-        // Draw the invader on the canvas
         if (this.props.image) {
-            // context.fillStyle = "red";
-            // context.fillRect(this.props.x, this.props.y, this.props.width, this.props.height);
             context.drawImage(
                 this.props.image,
                 this.frame * this.spriteWidth,
