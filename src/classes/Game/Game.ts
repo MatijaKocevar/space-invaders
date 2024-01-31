@@ -53,7 +53,7 @@ export class Game {
     }
 
     update = () => {
-        this.invaders.updateInvaders(this.gameFrame);
+        this.invaders.updateInvaders();
         this.defender.update();
         this.projectiles.update();
         this.shields.handleCollision();
@@ -67,9 +67,9 @@ export class Game {
 
         this.invaders.draw();
         this.defender.draw();
-        this.shields.draw();
         this.projectiles.draw();
         this.explosions.draw();
+        this.shields.draw();
 
         this.scoreService.drawHighscore();
         this.livesService.drawLives();

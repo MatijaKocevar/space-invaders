@@ -128,7 +128,7 @@ export class Invaders {
         this.livingInvaders = invaders;
     };
 
-    updateInvaders = (gameFrame: number) => {
+    updateInvaders = () => {
         this.handleCollision();
 
         const { game } = this.props;
@@ -195,7 +195,7 @@ export class Invaders {
         // Update the invader direction and position
         if (
             this.livingInvaders.length > 0 &&
-            gameFrame % this.animationSpeed === 0
+            game.gameFrame % this.animationSpeed === 0
         ) {
             this.updateDirection();
             this.livingInvaders.forEach((invader) => {
@@ -212,13 +212,16 @@ export class Invaders {
         // Fire a projectile if the invader is livingInvaders and the game frame is a multiple of the animation speed
         if (
             this.livingInvaders.length > 0 &&
-            gameFrame % this.animationSpeed === 0
+            game.gameFrame % this.animationSpeed === 0
         ) {
             const randomInvader = Math.floor(
                 Math.random() * this.livingInvaders.length
             );
 
-            if (gameFrame % 25 === 0 && game.projectiles.invader.length < 3) {
+            if (
+                game.gameFrame % 25 === 0 &&
+                game.projectiles.invader.length < 3
+            ) {
                 game.projectiles.invader.push(
                     this.livingInvaders[randomInvader].fire()
                 );
