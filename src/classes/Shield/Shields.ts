@@ -55,79 +55,29 @@ export class Shields {
     };
 
     handleCollision() {
-        const { defender, invader } = this.props.game.projectiles;
+        const { projectiles } = this.props.game;
         const { invaders } = this.props.game;
         const defenderProjectilesToRemove: { index: number }[] = [];
         const invaderProjectilesToRemove: { index: number }[] = [];
 
-        defender.forEach((projectile, i) => {
+        projectiles.defender.forEach((projectile, i) => {
             const minX = projectile.props.x;
             const maxX = projectile.props.x + projectile.props.width;
             const minY = projectile.props.y;
             const maxY = projectile.props.y + projectile.props.height;
 
-            for (let x = minX; x <= maxX; x++) {
-                for (let y = minY; y <= maxY; y++) {
-                    const key = `${x}x${y}`;
-                    // Check if the particle exists
-                    if (this.allParticles[key]) {
-                        this.allParticles[key] = false;
-                        defenderProjectilesToRemove.push({ index: i });
-                    }
-                }
-            }
-
-            const minXBlast = minX - this.explosionRadius;
-            const maxXBlast = maxX + this.explosionRadius;
-            const minYBlast = minY - this.explosionRadius;
-            const maxYBlast = maxY + this.explosionRadius;
-
-            for (let x = minXBlast; x <= maxXBlast; x++) {
-                for (let y = minYBlast; y <= maxYBlast; y++) {
-                    const key = `${x}x${y}`;
-                    // Check if the particle exists
-                    if (this.allParticles[key]) {
-                        if (this.explosionChance > Math.random()) {
-                            this.allParticles[key] = false;
-                        }
-                    }
-                }
-            }
+            const isCollided = this.collide(minX, maxX, minY, maxY, true);
+            if (isCollided) defenderProjectilesToRemove.push({ index: i });
         });
 
-        invader.forEach((projectile, i) => {
+        projectiles.invader.forEach((projectile, i) => {
             const minX = projectile.props.x;
             const maxX = projectile.props.x + projectile.props.width;
             const minY = projectile.props.y;
             const maxY = projectile.props.y + projectile.props.height;
 
-            for (let x = minX; x <= maxX; x++) {
-                for (let y = minY; y <= maxY; y++) {
-                    const key = `${x}x${y}`;
-                    // Check if the particle exists
-                    if (this.allParticles[key]) {
-                        this.allParticles[key] = false;
-                        invaderProjectilesToRemove.push({ index: i });
-                    }
-                }
-            }
-
-            const minXBlast = minX - this.explosionRadius;
-            const maxXBlast = maxX + this.explosionRadius;
-            const minYBlast = minY - this.explosionRadius;
-            const maxYBlast = maxY + this.explosionRadius;
-
-            for (let x = minXBlast; x <= maxXBlast; x++) {
-                for (let y = minYBlast; y <= maxYBlast; y++) {
-                    const key = `${x}x${y}`;
-                    // Check if the particle exists
-                    if (this.allParticles[key]) {
-                        if (this.explosionChance > Math.random()) {
-                            this.allParticles[key] = false;
-                        }
-                    }
-                }
-            }
+            const isCollided = this.collide(minX, maxX, minY, maxY, true);
+            if (isCollided) invaderProjectilesToRemove.push({ index: i });
         });
 
         invaders.livingInvaders.forEach((invader) => {
@@ -136,24 +86,58 @@ export class Shields {
             const minY = invader.props.y;
             const maxY = invader.props.y + invader.props.height;
 
-            for (let x = minX; x <= maxX; x++) {
-                for (let y = minY; y <= maxY; y++) {
-                    const key = `${x}x${y}`;
-                    // Check if the particle exists
-                    if (this.allParticles[key]) {
-                        this.allParticles[key] = false;
-                    }
-                }
-            }
+            this.collide(minX, maxX, minY, maxY, false);
         });
 
         defenderProjectilesToRemove?.forEach((projectile) =>
-            defender.splice(projectile.index, 1)
+            projectiles.defender.splice(projectile.index, 1)
         );
 
         invaderProjectilesToRemove.forEach((projectile) =>
-            invader.splice(projectile.index, 1)
+            projectiles.invader.splice(projectile.index, 1)
         );
+    }
+
+    collide(
+        minX: number,
+        maxX: number,
+        minY: number,
+        maxY: number,
+        blast: boolean
+    ) {
+        let isCollided = false;
+
+        for (let x = minX; x <= maxX; x++) {
+            for (let y = minY; y <= maxY; y++) {
+                const key = `${x}x${y}`;
+                // Check if the particle exists
+                if (this.allParticles[key]) {
+                    this.allParticles[key] = false;
+                    isCollided = true;
+                }
+            }
+        }
+
+        if (isCollided && blast) {
+            const minXBlast = minX - this.explosionRadius;
+            const maxXBlast = maxX + this.explosionRadius;
+            const minYBlast = minY - this.explosionHeight;
+            const maxYBlast = maxY + this.explosionHeight;
+
+            for (let x = minXBlast; x <= maxXBlast; x++) {
+                for (let y = minYBlast; y <= maxYBlast; y++) {
+                    const key = `${x}x${y}`;
+                    // Check if the particle exists
+                    if (this.allParticles[key]) {
+                        if (this.explosionChance > Math.random()) {
+                            this.allParticles[key] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return isCollided;
     }
 
     draw() {
