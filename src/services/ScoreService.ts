@@ -19,7 +19,7 @@ export class ScoreService {
             alignment: 'center',
             fillStyle: 'white',
             font: 'bold 15px Arial',
-            text: 'SCORE',
+            text: 'SCORE ',
             x: 40,
             y: 20,
         });

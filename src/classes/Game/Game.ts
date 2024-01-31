@@ -1,5 +1,5 @@
 import { GameService } from '../../services/GameService';
-import { ScoreService } from '../../services/HighscoreService';
+import { ScoreService } from '../../services/ScoreService';
 import { LivesService } from '../../services/LivesService';
 import { Defender } from '../Defender/Defender';
 import { Explosions } from '../Explosion/Explosions';
