@@ -34,15 +34,17 @@ export class DefenderService {
         const { inputHandler } = this.props.game;
         const { defender } = this.props.game;
 
-        if (inputHandler.keys.includes('KeyD')) {
-            defender.speed = defender.maxSpeed;
-        } else if (inputHandler.keys.includes('KeyA')) {
-            defender.speed = -defender.maxSpeed;
-        } else {
-            defender.speed = 0;
-        }
+        if (defender.isCollided === false) {
+            if (inputHandler.keys.includes('KeyD')) {
+                defender.speed = defender.maxSpeed;
+            } else if (inputHandler.keys.includes('KeyA')) {
+                defender.speed = -defender.maxSpeed;
+            } else {
+                defender.speed = 0;
+            }
 
-        defender.x += defender.speed;
+            defender.x += defender.speed;
+        }
     };
 
     handleShooting = () => {
@@ -51,7 +53,8 @@ export class DefenderService {
 
         if (
             inputHandler.keys.includes('Enter') &&
-            game.projectiles.defender.length === 0
+            game.projectiles.defender.length === 0 &&
+            defender.isCollided === false
         ) {
             if (!defender.reload) {
                 game.projectiles.defender.push(this.fire());
