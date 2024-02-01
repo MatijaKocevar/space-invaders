@@ -17,8 +17,10 @@ export class CollisionService {
     }
 
     handleCollisions() {
-        this.shields.handleCollision();
-        this.defender.handleCollision();
+        const { game } = this.props;
+
+        if (game.shieldsOn) this.shields.handleCollision();
+        if (!game.godMode) this.defender.handleCollision();
         this.invaders.handleCollision();
     }
 }

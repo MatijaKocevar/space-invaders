@@ -4,4 +4,6 @@ export interface IGame {
     // mobileControls: any;
     context: CanvasRenderingContext2D;
     // setShowPopupScore: any;
+    godMode: boolean;
+    shieldsOn: boolean;
 }

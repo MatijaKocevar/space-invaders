@@ -1,4 +1,4 @@
-import { Defender } from '../../classes/Defender/Defender';
+import { Defender } from '../../components/Defender/Defender';
 
 export interface ILivesService {
     defender: Defender;

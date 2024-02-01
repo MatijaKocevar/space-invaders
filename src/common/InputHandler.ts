@@ -1,4 +1,4 @@
-import { Game } from '../classes/Game/Game';
+import { Game } from '../components/Game/Game';
 
 export class InputHandler {
     keys: string[];

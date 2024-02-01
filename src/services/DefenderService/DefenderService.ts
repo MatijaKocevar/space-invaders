@@ -1,4 +1,4 @@
-import { Projectile } from '../../classes/Projectile/Projectile';
+import { Projectile } from '../../components/Projectile/Projectile';
 import { IDefenderService } from './IDefenderService.interface';
 
 export class DefenderService {

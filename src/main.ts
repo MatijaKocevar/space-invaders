@@ -1,4 +1,4 @@
-import { Game } from './classes/Game/Game';
+import { Game } from './components/Game/Game';
 import './style.css';
 
 let game: Game | undefined;
@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 context,
                 gameWidth: canvasWidth,
                 gameHeight: canvasHeight,
+                godMode: false,
+                shieldsOn: true,
             });
 
             animate();
@@ -32,23 +34,9 @@ const handleReset = () => {
     if (game?.gameService.isGameOver) {
         game.gameService.setGameOver(false);
 
-        const canvas = document.querySelector(
-            '#game-canvas'
-        ) as HTMLCanvasElement;
+        game.reset();
 
-        if (canvas) {
-            const context = canvas.getContext('2d');
-
-            if (context) {
-                game = new Game({
-                    context,
-                    gameWidth: canvas.width,
-                    gameHeight: canvas.height,
-                });
-
-                animate();
-            }
-        }
+        animate();
     }
 };
 

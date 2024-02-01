@@ -20,6 +20,8 @@ export class Game {
     projectiles: Projectiles;
     explosions: Explosions;
     playSound = false;
+    godMode;
+    shieldsOn;
 
     //services
     gameService: GameService;
@@ -29,6 +31,10 @@ export class Game {
 
     constructor(props: IGame) {
         this.props = props;
+
+        this.godMode = props.godMode;
+        this.shieldsOn = props.shieldsOn;
+
         this.inputHandler = new InputHandler(this);
         this.shields = new Shields({ game: this });
         this.invaders = new Invaders({ game: this });
@@ -77,10 +83,14 @@ export class Game {
         this.invaders.draw();
         this.defender.draw();
         this.explosions.draw();
-        this.shields.draw();
+        if (this.shieldsOn) this.shields.draw();
 
         this.scoreService.drawHighscore();
         this.livesService.drawLives();
+    };
+
+    reset = () => {
+        this.invaders = new Invaders({ game: this });
     };
 
     destroy = () => {
