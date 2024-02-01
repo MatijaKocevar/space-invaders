@@ -32,6 +32,10 @@ body {
             color: white;
             background-color: red;
         }
+
+        .active {
+            background-color: green;
+        }
     }
 
     canvas {
