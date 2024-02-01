@@ -1,11 +1,5 @@
-import { Defender } from '../classes/Defender/Defender';
-import { drawText } from '../utils/utils';
-
-interface ILivesService {
-    defender: Defender;
-    context: CanvasRenderingContext2D;
-    gameWidth: number;
-}
+import { drawText } from '../../utils/utils';
+import { ILivesService } from './LivesService.interface';
 
 export class LivesService {
     props: ILivesService;

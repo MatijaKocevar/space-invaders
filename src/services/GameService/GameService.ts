@@ -1,10 +1,5 @@
-import { drawText } from '../utils/utils';
-
-interface IGameService {
-    gameWidth: number;
-    gameHeight: number;
-    context: CanvasRenderingContext2D;
-}
+import { drawText } from '../../utils/utils';
+import { IGameService } from './GameService.interface';
 
 export class GameService {
     props: IGameService;

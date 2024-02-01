@@ -1,8 +1,5 @@
-import { drawText } from '../utils/utils';
-
-interface IScoreService {
-    context: CanvasRenderingContext2D;
-}
+import { drawText } from '../../utils/utils';
+import { IScoreService } from './ScoreService.interface';
 
 export class ScoreService {
     props: IScoreService;
