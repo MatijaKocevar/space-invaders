@@ -1,3 +1,4 @@
+import { DevControls } from './components/DevControls/DevControls';
 import { Game } from './components/Game/Game';
 import './style.css';
 
@@ -24,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 godMode: false,
                 shieldsOn: true,
             });
+
+            new DevControls({ game });
 
             animate();
         }

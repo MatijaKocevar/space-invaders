@@ -53,8 +53,6 @@ export class Shields {
         );
 
         this.shieldArray.forEach((shield) => {
-            console.log(shield.allParticles);
-
             this.allParticles = {
                 ...this.allParticles,
                 ...shield.allParticles,
