@@ -89,10 +89,6 @@ export class Game {
         this.livesService.drawLives();
     };
 
-    reset = () => {
-        this.invaders = new Invaders({ game: this });
-    };
-
     destroy = () => {
         this.inputHandler.destroy();
         this.invaders.destroy();

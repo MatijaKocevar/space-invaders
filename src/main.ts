@@ -3,6 +3,7 @@ import { Game } from './components/Game/Game';
 import './style.css';
 
 let game: Game | undefined;
+let devControls: DevControls | undefined;
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shieldsOn: true,
             });
 
-            new DevControls({ game });
+            devControls = new DevControls({ game });
 
             animate();
         }
@@ -35,11 +36,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const handleReset = () => {
     if (game?.gameService.isGameOver) {
-        game.gameService.setGameOver(false);
+        const canvas = document.querySelector(
+            '#game-canvas'
+        ) as HTMLCanvasElement;
+        canvas.addEventListener('click', handleReset);
 
-        game.reset();
+        if (canvas) {
+            const context = canvas.getContext('2d');
 
-        animate();
+            const canvasWidth = 600;
+            const canvasHeight = 600;
+
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            if (context) {
+                let currentScore = game.scoreService.score;
+                if (game.gameService.gameOverMessage !== 'You win!') {
+                    currentScore = 0;
+                }
+
+                game = new Game({
+                    context,
+                    gameWidth: canvasWidth,
+                    gameHeight: canvasHeight,
+                    godMode: game.godMode,
+                    shieldsOn: game.shieldsOn,
+                });
+
+                game.scoreService.score = currentScore;
+
+                if (devControls) devControls.props.game = game;
+
+                animate();
+            }
+        }
     }
 };
 
