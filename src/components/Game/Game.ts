@@ -1,6 +1,6 @@
-import { GameService } from '../../services/GameService';
-import { ScoreService } from '../../services/ScoreService';
-import { LivesService } from '../../services/LivesService';
+import { GameService } from '../../services/GameService/GameService';
+import { ScoreService } from '../../services/ScoreService/ScoreService';
+import { LivesService } from '../../services/LivesService/LivesService';
 import { Defender } from '../Defender/Defender';
 import { Explosions } from '../Explosion/Explosions';
 import { InputHandler } from '../../common/InputHandler';
@@ -8,6 +8,7 @@ import { Invaders } from '../Invader/Invaders';
 import { Projectiles } from '../Projectile/Projectiles';
 import { Shields } from '../Shield/Shields';
 import { IGame } from './entities/IGame.interface';
+import { CollisionService } from '../../services/CollisionService/CollisionService';
 
 export class Game {
     props: IGame;
@@ -19,14 +20,21 @@ export class Game {
     projectiles: Projectiles;
     explosions: Explosions;
     playSound = false;
+    godMode;
+    shieldsOn;
 
     //services
     gameService: GameService;
     livesService: LivesService;
     scoreService: ScoreService;
+    collisionService: CollisionService;
 
     constructor(props: IGame) {
         this.props = props;
+
+        this.godMode = props.godMode;
+        this.shieldsOn = props.shieldsOn;
+
         this.inputHandler = new InputHandler(this);
         this.shields = new Shields({ game: this });
         this.invaders = new Invaders({ game: this });
@@ -51,14 +59,18 @@ export class Game {
             context: props.context,
         });
 
+        this.collisionService = new CollisionService({
+            game: this,
+        });
+
         this.shields.draw();
     }
 
     update = () => {
+        this.projectiles.update();
         this.invaders.updateInvaders();
         this.defender.update();
-        this.projectiles.update();
-        this.shields.handleCollision();
+        this.collisionService.handleCollisions();
     };
 
     draw = () => {
@@ -67,14 +79,18 @@ export class Game {
         this.gameFrame++;
         context.clearRect(0, 0, this.props.gameWidth, this.props.gameHeight);
 
+        this.projectiles.draw();
         this.invaders.draw();
         this.defender.draw();
-        this.projectiles.draw();
         this.explosions.draw();
-        this.shields.draw();
+        if (this.shieldsOn) this.shields.draw();
 
         this.scoreService.drawHighscore();
         this.livesService.drawLives();
+    };
+
+    reset = () => {
+        this.invaders = new Invaders({ game: this });
     };
 
     destroy = () => {

@@ -13,6 +13,31 @@ body {
     justify-content: center;
     align-items: center;
 
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .dev-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+
+        button {
+            border-radius: 10px;
+            color: white;
+            background-color: red;
+        }
+
+        .active {
+            background-color: green;
+        }
+    }
+
     canvas {
         background-color: black;
         border-radius: 5px;

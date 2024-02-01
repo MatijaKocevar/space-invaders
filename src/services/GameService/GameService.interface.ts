@@ -1,7 +1,5 @@
-export interface IGame {
+export interface IGameService {
     gameWidth: number;
     gameHeight: number;
-    // mobileControls: any;
     context: CanvasRenderingContext2D;
-    // setShowPopupScore: any;
 }
