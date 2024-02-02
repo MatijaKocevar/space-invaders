@@ -1,9 +1,9 @@
-import { DevControls } from './components/DevControls/DevControls';
+import { GameOptions } from './components/GameOptions/GameOptions';
 import { Game } from './components/Game/Game';
 import './style.css';
 
 let game: Game | undefined;
-let devControls: DevControls | undefined;
+let devControls: GameOptions | undefined;
 const canvasWidth = 600;
 const canvasHeight = 600;
 
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shieldsOn: true,
             });
 
-            devControls = new DevControls({ game });
+            devControls = new GameOptions({ game });
 
             animate();
         }

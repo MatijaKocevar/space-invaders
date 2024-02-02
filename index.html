@@ -11,12 +11,16 @@
 <body>
   <div id="app">
     <div class="wrapper">
-      <div class="dev-container">
-        <button id="god-mode-button">God Mode</button>
-        <button id="shields-on-button">Shields</button>
-      </div>
       <div class="game-wrapper">
-        <canvas id="game-canvas"></canvas>
+        <div class="game-options">
+          <button id="highscore-button">Highscores</button>
+          <button id="change-log-button">Change log</button>
+          <button id="god-mode-button">God Mode</button>
+          <button id="shields-on-button">Shields</button>
+        </div>
+        <div class="game">
+          <canvas id="game-canvas" />
+        </div>
       </div>
       <div class="mobile-controls"></div>
     </div>

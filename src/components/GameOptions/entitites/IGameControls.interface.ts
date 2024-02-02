@@ -1,5 +1,5 @@
 import { Game } from '../../Game/Game';
 
-export interface IDevControls {
+export interface IGameControls {
     game: Game;
 }
