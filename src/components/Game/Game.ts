@@ -44,9 +44,7 @@ export class Game {
 
         //services
         this.gameService = new GameService({
-            context: props.context,
-            gameHeight: props.gameHeight,
-            gameWidth: props.gameWidth,
+            game: this,
         });
 
         this.livesService = new LivesService({
@@ -74,10 +72,10 @@ export class Game {
     };
 
     draw = () => {
-        const { context } = this.props;
+        const { context, gameWidth, gameHeight } = this.props;
 
         this.gameFrame++;
-        context.clearRect(0, 0, this.props.gameWidth, this.props.gameHeight);
+        context.clearRect(0, 0, gameWidth, gameHeight);
 
         this.projectiles.draw();
         this.invaders.draw();
@@ -87,6 +85,11 @@ export class Game {
 
         this.scoreService.drawHighscore();
         this.livesService.drawLives();
+    };
+
+    setGameSize = (width: number, height: number) => {
+        this.props.gameWidth = width;
+        this.props.gameHeight = height;
     };
 
     destroy = () => {

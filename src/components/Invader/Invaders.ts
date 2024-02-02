@@ -230,8 +230,6 @@ export class Invaders {
                 'Invaders have reached the ground! You lose!'
             );
             game.gameService.setGameOver(true);
-
-            game.inputHandler.destroy();
         }
 
         if (this.livingInvaders.length === 0) {
