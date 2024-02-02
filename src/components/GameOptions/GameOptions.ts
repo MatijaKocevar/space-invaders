@@ -84,41 +84,37 @@ export class GameOptions {
     };
 
     showPopup = (element: HTMLElement) => {
-        // Create the popup wrapper
         const popupWrapper = document.createElement('div');
         popupWrapper.classList.add('popup-wrapper');
 
-        // Create the popup element
         const popup = document.createElement('div');
         popup.classList.add('popup');
 
-        // Add element to the popup
         popup.appendChild(element);
 
-        // Create close button
         const closeButton = document.createElement('button');
         closeButton.innerText = 'X';
         closeButton.style.marginTop = '10px';
         closeButton.classList.add('close-button');
         popup.prepend(closeButton);
 
-        // Append the popup to the wrapper, then the wrapper to the body
         popupWrapper.appendChild(popup);
         document.body.appendChild(popupWrapper);
 
-        // Close popup on button click
+        document.body.classList.add('no-scroll');
+
         closeButton.addEventListener('click', function () {
             document.body.removeChild(popupWrapper);
+            document.body.classList.remove('no-scroll');
         });
 
-        // Close popup when clicking outside of it
         popupWrapper.addEventListener('click', function (event) {
             if (event.target === popupWrapper) {
                 document.body.removeChild(popupWrapper);
+                document.body.classList.remove('no-scroll');
             }
         });
 
-        // Prevent popup inner click from propagating to the wrapper
         popup.addEventListener('click', function (event) {
             event.stopPropagation();
         });
