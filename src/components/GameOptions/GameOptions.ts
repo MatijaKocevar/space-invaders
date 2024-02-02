@@ -1,3 +1,4 @@
+import { HighscoreService } from '../../services/HighscoreService/HighscoreService';
 import { IGameControls } from './entitites/IGameControls.interface';
 
 export class GameOptions {
@@ -8,12 +9,18 @@ export class GameOptions {
     changeLogButton: HTMLButtonElement | null;
     isDevelopment = import.meta.env.MODE === 'development';
 
+    highscoreService: HighscoreService;
+
     constructor(props: IGameControls) {
         this.props = props;
         this.godModeButton = document.querySelector('#god-mode-button');
         this.shieldsOnButton = document.querySelector('#shields-on-button');
         this.highscoreButton = document.querySelector('#highscore-button');
         this.changeLogButton = document.querySelector('#change-log-button');
+
+        this.highscoreService = new HighscoreService({
+            game: this.props.game,
+        });
 
         this.init();
     }
@@ -76,7 +83,7 @@ export class GameOptions {
         else this.shieldsOnButton?.classList.remove('active');
     };
 
-    showPopup = (message: string) => {
+    showPopup = (element: HTMLElement) => {
         // Create the popup wrapper
         const popupWrapper = document.createElement('div');
         popupWrapper.classList.add('popup-wrapper');
@@ -85,10 +92,8 @@ export class GameOptions {
         const popup = document.createElement('div');
         popup.classList.add('popup');
 
-        // Add message to the popup
-        const popupText = document.createElement('p');
-        popupText.innerText = message;
-        popup.appendChild(popupText);
+        // Add element to the popup
+        popup.appendChild(element);
 
         // Create close button
         const closeButton = document.createElement('button');
@@ -119,12 +124,15 @@ export class GameOptions {
         });
     };
 
-    onHighscoreButtonClick = () => {
-        this.showPopup('Highscores feature is currently under construction.');
+    onHighscoreButtonClick = async () => {
+        const highscoreElement =
+            await this.highscoreService.getHighscoreElement();
+
+        this.showPopup(highscoreElement);
     };
 
     onChangeLogButtonClick = () => {
-        this.showPopup('Check back soon for updates!');
+        console.log('Change log button clicked');
     };
 
     destroy = () => {
