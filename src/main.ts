@@ -50,9 +50,12 @@ const handleReset = () => {
             if (context) {
                 let currentScore = game.scoreService.score;
                 let currentShields = game.shields;
+                let currentPlayerX = game.defender.x;
+
                 if (game.gameService.gameOverMessage !== 'You win!') {
                     currentScore = 0;
                     currentShields = new Shields({ game });
+                    currentPlayerX = 50;
                 }
 
                 game.destroy();
@@ -67,6 +70,7 @@ const handleReset = () => {
 
                 game.scoreService.score = currentScore;
                 game.shields = currentShields;
+                game.defender.x = currentPlayerX;
 
                 if (devControls) devControls.props.game = game;
 

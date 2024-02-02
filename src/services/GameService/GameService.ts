@@ -53,7 +53,10 @@ export class GameService {
             alignment: 'center',
             fillStyle: 'white',
             font: '18px Arial',
-            text: 'Click anywhere to reset',
+            text:
+                this.gameOverMessage === 'You win!'
+                    ? 'Click anywhere to continue'
+                    : 'Click anywhere to reset',
             x: gameWidth / 2,
             y: gameHeight / 2.2 + 100,
         });
