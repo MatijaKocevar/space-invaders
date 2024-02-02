@@ -1,9 +1,10 @@
 import { GameOptions } from './components/GameOptions/GameOptions';
 import { Game } from './components/Game/Game';
 import './style.css';
+import { Shields } from './components/Shield/Shields';
 
 let game: Game | undefined;
-let devControls: GameOptions | undefined;
+let gameOptions: GameOptions | undefined;
 const canvasWidth = 600;
 const canvasHeight = 600;
 
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shieldsOn: true,
             });
 
-            devControls = new GameOptions({ game });
+            gameOptions = new GameOptions({ game });
 
             animate();
         }
@@ -48,8 +49,13 @@ const handleReset = () => {
 
             if (context) {
                 let currentScore = game.scoreService.score;
+                let currentShields = game.shields;
+                let currentPlayerX = game.defender.x;
+
                 if (game.gameService.gameOverMessage !== 'You win!') {
                     currentScore = 0;
+                    currentShields = new Shields({ game });
+                    currentPlayerX = 50;
                 }
 
                 game.destroy();
@@ -63,8 +69,10 @@ const handleReset = () => {
                 });
 
                 game.scoreService.score = currentScore;
+                game.shields = currentShields;
+                game.defender.x = currentPlayerX;
 
-                if (devControls) devControls.props.game = game;
+                if (gameOptions) gameOptions.props.game = game;
 
                 animate();
             }
@@ -78,6 +86,11 @@ const animate = () => {
 
     if (game?.gameService.isGameOver) {
         game?.gameService.drawGameOver();
+
+        if (game.gameService.gameOverMessage !== 'You win!') {
+            gameOptions?.saveHighscore();
+        }
+
         return;
     }
     requestAnimationFrame(animate);

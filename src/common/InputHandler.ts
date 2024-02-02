@@ -18,13 +18,10 @@ export class InputHandler {
     }
 
     keydownHandler = (e: KeyboardEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (
-            (e.code === 'KeyW' ||
-                e.code === 'KeyA' ||
-                e.code === 'KeyD' ||
-                e.code === 'Enter') &&
+            (e.code === 'KeyA' || e.code === 'KeyD' || e.code === 'Space') &&
             this.keys.indexOf(e.code) === -1
         ) {
             this.keys.push(e.code);
@@ -32,9 +29,9 @@ export class InputHandler {
     };
 
     keyupHandler = (e: KeyboardEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
 
-        if (e.code === 'KeyA' || e.code === 'KeyD' || e.code === 'Enter') {
+        if (e.code === 'KeyA' || e.code === 'KeyD' || e.code === 'Space') {
             this.keys.splice(this.keys.indexOf(e.code), 1);
         }
     };
@@ -98,7 +95,7 @@ export class InputHandler {
     };
 
     onFireButtonTouchStart = () => {
-        this.keys.push('Enter');
+        this.keys.push('Space');
     };
 
     onLeftButtonTouchEnd = () => {
@@ -110,7 +107,7 @@ export class InputHandler {
     };
 
     onFireButtonTouchEnd = () => {
-        this.keys.splice(this.keys.indexOf('Enter'), 1);
+        this.keys.splice(this.keys.indexOf('Space'), 1);
     };
 
     destroy = () => {

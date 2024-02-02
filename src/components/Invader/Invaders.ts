@@ -238,11 +238,6 @@ export class Invaders {
 
             this.speed = 6;
             this.animationSpeed = 35;
-
-            game.shields.shieldArray = [];
-            game.shields.createShields(game.props.gameWidth);
-
-            game.invaders.createInvaders();
         }
     };
 

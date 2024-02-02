@@ -1,3 +1,5 @@
+import { HighscoreService } from '../../services/HighscoreService/HighscoreService';
+import { changeLog } from '../ChangeLog/ChangeLog';
 import { IGameControls } from './entitites/IGameControls.interface';
 
 export class GameOptions {
@@ -8,12 +10,18 @@ export class GameOptions {
     changeLogButton: HTMLButtonElement | null;
     isDevelopment = import.meta.env.MODE === 'development';
 
+    highscoreService: HighscoreService;
+
     constructor(props: IGameControls) {
         this.props = props;
         this.godModeButton = document.querySelector('#god-mode-button');
         this.shieldsOnButton = document.querySelector('#shields-on-button');
         this.highscoreButton = document.querySelector('#highscore-button');
         this.changeLogButton = document.querySelector('#change-log-button');
+
+        this.highscoreService = new HighscoreService({
+            game: this.props.game,
+        });
 
         this.init();
     }
@@ -76,55 +84,97 @@ export class GameOptions {
         else this.shieldsOnButton?.classList.remove('active');
     };
 
-    showPopup = (message: string) => {
-        // Create the popup wrapper
+    showPopup = (element: HTMLElement) => {
         const popupWrapper = document.createElement('div');
         popupWrapper.classList.add('popup-wrapper');
 
-        // Create the popup element
         const popup = document.createElement('div');
         popup.classList.add('popup');
 
-        // Add message to the popup
-        const popupText = document.createElement('p');
-        popupText.innerText = message;
-        popup.appendChild(popupText);
+        popup.appendChild(element);
 
-        // Create close button
         const closeButton = document.createElement('button');
         closeButton.innerText = 'X';
         closeButton.style.marginTop = '10px';
         closeButton.classList.add('close-button');
         popup.prepend(closeButton);
 
-        // Append the popup to the wrapper, then the wrapper to the body
         popupWrapper.appendChild(popup);
         document.body.appendChild(popupWrapper);
 
-        // Close popup on button click
+        document.body.classList.add('no-scroll');
+
         closeButton.addEventListener('click', function () {
             document.body.removeChild(popupWrapper);
+            document.body.classList.remove('no-scroll');
         });
 
-        // Close popup when clicking outside of it
         popupWrapper.addEventListener('click', function (event) {
             if (event.target === popupWrapper) {
                 document.body.removeChild(popupWrapper);
+                document.body.classList.remove('no-scroll');
             }
         });
 
-        // Prevent popup inner click from propagating to the wrapper
         popup.addEventListener('click', function (event) {
             event.stopPropagation();
         });
     };
 
-    onHighscoreButtonClick = () => {
-        this.showPopup('Highscores feature is currently under construction.');
+    onHighscoreButtonClick = async () => {
+        const highscoreElement =
+            await this.highscoreService.getHighscoreElement();
+
+        this.showPopup(highscoreElement);
     };
 
     onChangeLogButtonClick = () => {
-        this.showPopup('Check back soon for updates!');
+        console.log('Change log button clicked');
+
+        this.showPopup(changeLog());
+    };
+
+    saveHighscore = () => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Enter your name';
+        input.classList.add('highscore-input');
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.classList.add('save-button');
+
+        const saveFunction = () => {
+            const name = input.value;
+            const { game } = this.props;
+
+            if (name) {
+                const score = game.scoreService.score;
+
+                this.highscoreService.onSaveHighscore(name, score);
+                document.body.removeChild(
+                    document.querySelector('.popup-wrapper')!
+                );
+
+                document.body.classList.remove('no-scroll');
+            } else {
+                alert('Please enter a name.');
+            }
+        };
+
+        saveButton.addEventListener('click', saveFunction);
+
+        input.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                saveFunction();
+            }
+        });
+
+        const container = document.createElement('div');
+        container.appendChild(input);
+        container.appendChild(saveButton);
+
+        this.showPopup(container);
     };
 
     destroy = () => {

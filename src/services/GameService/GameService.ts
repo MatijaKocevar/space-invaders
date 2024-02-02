@@ -53,7 +53,10 @@ export class GameService {
             alignment: 'center',
             fillStyle: 'white',
             font: '18px Arial',
-            text: 'Click anywhere to reset',
+            text:
+                this.gameOverMessage === 'You win!'
+                    ? 'Click anywhere to continue'
+                    : 'Click anywhere to reset',
             x: gameWidth / 2,
             y: gameHeight / 2.2 + 100,
         });
@@ -65,5 +68,18 @@ export class GameService {
 
     setGameOverMessage = (message: string) => {
         this.gameOverMessage = message;
+    };
+
+    drawInstructions = () => {
+        const { context, gameWidth } = this.props.game.props;
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: '12px Arial',
+            text: 'A/D to move, Space to shoot',
+            x: gameWidth / 2,
+            y: 20,
+        });
     };
 }

@@ -51,7 +51,7 @@ export class DefenderService {
         const { game } = this.props;
 
         if (
-            inputHandler.keys.includes('Enter') &&
+            inputHandler.keys.includes('Space') &&
             game.projectiles.defender.length === 0 &&
             defender.isCollided === false
         ) {

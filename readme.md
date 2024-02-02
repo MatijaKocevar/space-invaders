@@ -14,7 +14,7 @@ To install and run the game, follow these steps:
 To play the game:
 - Use [a] to move left
 - Use [d] to move right
-- Press [enter] to shoot
+- Press [space] to shoot
 
 ## Technologies Used
 - TypeScript
