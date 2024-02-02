@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "attach",
             "name": "Attach",
-            "url": "http://localhost:5173",
+            "url": "http://localhost:5173/space-invaders/",
             "webRoot": "${workspaceFolder}",
             "port": 9222
         }

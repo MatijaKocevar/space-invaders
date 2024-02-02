@@ -1,5 +1,5 @@
+import { Game } from '../../components/Game/Game';
+
 export interface IGameService {
-    gameWidth: number;
-    gameHeight: number;
-    context: CanvasRenderingContext2D;
+    game: Game;
 }

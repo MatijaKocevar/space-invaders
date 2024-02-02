@@ -15,7 +15,6 @@ export class DefenderService {
         if (defender.lives === 0) {
             game.gameService.gameOverMessage = 'An invader shot you! You Lose!';
             game.gameService.setGameOver(true);
-            game.inputHandler.destroy();
             return true;
         }
         return false;

@@ -25,6 +25,4 @@ export class Projectile {
             this.props.height
         );
     }
-
-    destroy = () => {};
 }

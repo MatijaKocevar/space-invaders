@@ -17,8 +17,8 @@ export class Shields {
         this.createShields(props.game.props.gameWidth);
 
         this.offScreenCanvas = document.createElement('canvas');
-        this.offScreenCanvas.width = 600;
-        this.offScreenCanvas.height = 600;
+        this.offScreenCanvas.width = props.game.props.gameWidth;
+        this.offScreenCanvas.height = props.game.props.gameHeight;
         this.offScreenContext = this.offScreenCanvas.getContext('2d');
 
         this.drawParticles();

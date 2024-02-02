@@ -1,9 +1,11 @@
-import { DevControls } from './components/DevControls/DevControls';
+import { GameOptions } from './components/GameOptions/GameOptions';
 import { Game } from './components/Game/Game';
 import './style.css';
 
 let game: Game | undefined;
-let devControls: DevControls | undefined;
+let devControls: GameOptions | undefined;
+const canvasWidth = 600;
+const canvasHeight = 600;
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -11,9 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (canvas) {
         const context = canvas.getContext('2d');
-
-        const canvasWidth = 600;
-        const canvasHeight = 600;
 
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
@@ -27,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shieldsOn: true,
             });
 
-            devControls = new DevControls({ game });
+            devControls = new GameOptions({ game });
 
             animate();
         }
@@ -44,9 +43,6 @@ const handleReset = () => {
         if (canvas) {
             const context = canvas.getContext('2d');
 
-            const canvasWidth = 600;
-            const canvasHeight = 600;
-
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
 
@@ -55,6 +51,8 @@ const handleReset = () => {
                 if (game.gameService.gameOverMessage !== 'You win!') {
                     currentScore = 0;
                 }
+
+                game.destroy();
 
                 game = new Game({
                     context,
@@ -84,3 +82,7 @@ const animate = () => {
     }
     requestAnimationFrame(animate);
 };
+
+window.addEventListener('beforeunload', () => {
+    game?.destroy();
+});

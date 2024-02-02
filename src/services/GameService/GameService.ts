@@ -8,10 +8,25 @@ export class GameService {
 
     constructor(props: IGameService) {
         this.props = props;
+
+        window.addEventListener('resize', this.handleResize);
     }
 
+    handleResize = () => {
+        const { innerWidth } = window;
+        const { inputHandler } = this.props.game;
+
+        if (innerWidth < 600) {
+            inputHandler.mobileControls?.classList.add('show-mobile-controls');
+        } else {
+            inputHandler.mobileControls?.classList.remove(
+                'show-mobile-controls'
+            );
+        }
+    };
+
     drawGameOver = () => {
-        const { context, gameWidth, gameHeight } = this.props;
+        const { context, gameWidth, gameHeight } = this.props.game.props;
 
         context.fillStyle = 'rgba(0, 0, 0, 0.7)';
         context.fillRect(0, 0, gameWidth, gameHeight);

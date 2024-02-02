@@ -19,6 +19,8 @@ body {
         justify-content: center;
         align-items: center;
         gap: 1rem;
+        height: 100%;
+        width: 100%;
     }
 
     .dev-container {
@@ -26,8 +28,11 @@ body {
         justify-content: center;
         align-items: center;
         gap: 1rem;
+        max-width: 100%;
 
         button {
+            width: 8rem;
+            height: 2rem;
             border-radius: 10px;
             color: white;
             background-color: red;
@@ -38,8 +43,86 @@ body {
         }
     }
 
-    canvas {
-        background-color: black;
-        border-radius: 5px;
+    .game-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100%;
+
+        .game-options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            max-width: 100%;
+
+            button {
+                width: 8rem;
+                height: 2rem;
+                border-radius: 10px;
+                color: white;
+                background-color: red;
+            }
+
+            .active {
+                background-color: green;
+            }
+        }
+
+        .game {
+            display: flex;
+            justify-content: center;
+
+            canvas {
+                background-color: black;
+                border-radius: 5px;
+                max-width: 100%;
+                width: auto;
+                height: auto;
+            }
+        }
+    }
+
+    .mobile-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        visibility: hidden;
+        max-width: 100%;
+
+        #left-button {
+            width: 8rem;
+            height: 3rem;
+            border-radius: 10px;
+            color: white;
+            background-color: transparent;
+            user-select: none;
+        }
+
+        #fire-button {
+            width: 8rem;
+            height: 3rem;
+            border-radius: 10px;
+            color: white;
+            background-color: transparent;
+            user-select: none;
+        }
+
+        #right-button {
+            width: 8rem;
+            height: 3rem;
+            border-radius: 10px;
+            color: white;
+            background-color: transparent;
+            user-select: none;
+        }
+    }
+
+    .show-mobile-controls {
+        visibility: visible;
     }
 }
