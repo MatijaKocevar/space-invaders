@@ -10,7 +10,7 @@ import { IInvaders } from './entities/IInvaders.interface';
 
 export class Invaders {
     props: IInvaders;
-    invadersCount = 55;
+    invadersCount = 1;
     invader1 = new Image();
     invader2_3 = new Image();
     invader3_4 = new Image();
@@ -233,14 +233,8 @@ export class Invaders {
         }
 
         if (this.livingInvaders.length === 0) {
-            game.gameService.setGameOverMessage('You win!');
-            game.gameService.setGameOver(true);
-
             this.speed = 6;
             this.animationSpeed = 35;
-
-            game.shields.shieldArray = [];
-            game.shields.createShields(game.props.gameWidth);
 
             game.invaders.createInvaders();
         }

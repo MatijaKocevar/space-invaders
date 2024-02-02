@@ -1,6 +1,7 @@
 import { GameOptions } from './components/GameOptions/GameOptions';
 import { Game } from './components/Game/Game';
 import './style.css';
+import { Shields } from './components/Shield/Shields';
 
 let game: Game | undefined;
 let devControls: GameOptions | undefined;
@@ -48,8 +49,10 @@ const handleReset = () => {
 
             if (context) {
                 let currentScore = game.scoreService.score;
+                let currentShields = game.shields;
                 if (game.gameService.gameOverMessage !== 'You win!') {
                     currentScore = 0;
+                    currentShields = new Shields({ game });
                 }
 
                 game.destroy();
@@ -63,6 +66,7 @@ const handleReset = () => {
                 });
 
                 game.scoreService.score = currentScore;
+                game.shields = currentShields;
 
                 if (devControls) devControls.props.game = game;
 
