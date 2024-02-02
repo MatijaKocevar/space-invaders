@@ -16,7 +16,7 @@ export class ScoreService {
             alignment: 'center',
             fillStyle: 'white',
             font: 'bold 15px Arial',
-            text: 'SCORE ',
+            text: 'SCORE',
             x: 40,
             y: 20,
         });
@@ -26,7 +26,7 @@ export class ScoreService {
             fillStyle: 'white',
             font: 'bold 15px Arial',
             text: this.score.toString(),
-            x: 80,
+            x: 90,
             y: 20,
         });
     };

@@ -8,6 +8,7 @@ export class GameOptions {
     shieldsOnButton: HTMLButtonElement | null;
     highscoreButton: HTMLButtonElement | null;
     changeLogButton: HTMLButtonElement | null;
+    soundButton: HTMLButtonElement | null;
     isDevelopment = import.meta.env.MODE === 'development';
 
     highscoreService: HighscoreService;
@@ -18,6 +19,7 @@ export class GameOptions {
         this.shieldsOnButton = document.querySelector('#shields-on-button');
         this.highscoreButton = document.querySelector('#highscore-button');
         this.changeLogButton = document.querySelector('#change-log-button');
+        this.soundButton = document.querySelector('#sounds-button');
 
         this.highscoreService = new HighscoreService({
             game: this.props.game,
@@ -54,7 +56,7 @@ export class GameOptions {
             }
         }
 
-        if (this.highscoreButton && this.changeLogButton) {
+        if (this.highscoreButton && this.changeLogButton && this.soundButton) {
             this.highscoreButton.addEventListener(
                 'click',
                 this.onHighscoreButtonClick
@@ -62,6 +64,10 @@ export class GameOptions {
             this.changeLogButton.addEventListener(
                 'click',
                 this.onChangeLogButtonClick
+            );
+            this.soundButton.addEventListener(
+                'click',
+                this.onSoundsButtonClick
             );
         }
     };
@@ -175,6 +181,18 @@ export class GameOptions {
         container.appendChild(saveButton);
 
         this.showPopup(container);
+    };
+
+    onSoundsButtonClick = () => {
+        const { game } = this.props;
+
+        game.playSound = !game.playSound;
+
+        if (game.playSound) {
+            this.soundButton?.classList.add('active');
+        } else {
+            this.soundButton?.classList.remove('active');
+        }
     };
 
     destroy = () => {
