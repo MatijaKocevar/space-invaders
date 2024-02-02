@@ -131,6 +131,49 @@ export class GameOptions {
         console.log('Change log button clicked');
     };
 
+    saveHighscore = () => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Enter your name';
+        input.classList.add('highscore-input');
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.classList.add('save-button');
+
+        const saveFunction = () => {
+            const name = input.value;
+            const { game } = this.props;
+
+            if (name) {
+                const score = game.scoreService.score;
+
+                this.highscoreService.onSaveHighscore(name, score);
+                document.body.removeChild(
+                    document.querySelector('.popup-wrapper')!
+                );
+
+                document.body.classList.remove('no-scroll');
+            } else {
+                alert('Please enter a name.');
+            }
+        };
+
+        saveButton.addEventListener('click', saveFunction);
+
+        input.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                saveFunction();
+            }
+        });
+
+        const container = document.createElement('div');
+        container.appendChild(input);
+        container.appendChild(saveButton);
+
+        this.showPopup(container);
+    };
+
     destroy = () => {
         if (this.godModeButton && this.shieldsOnButton) {
             this.godModeButton.removeEventListener(

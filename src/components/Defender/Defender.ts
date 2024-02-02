@@ -16,7 +16,7 @@ export class Defender {
     reload = false;
     image: HTMLImageElement;
     explosionImage: HTMLImageElement;
-    lives = 3;
+    lives = 1;
     previousAnimationSpeed = 0;
     isCollided = false;
     collisionPause = 0;

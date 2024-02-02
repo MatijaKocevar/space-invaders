@@ -18,7 +18,7 @@ export class InputHandler {
     }
 
     keydownHandler = (e: KeyboardEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (
             (e.code === 'KeyW' ||
@@ -32,7 +32,7 @@ export class InputHandler {
     };
 
     keyupHandler = (e: KeyboardEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         if (e.code === 'KeyA' || e.code === 'KeyD' || e.code === 'Enter') {
             this.keys.splice(this.keys.indexOf(e.code), 1);

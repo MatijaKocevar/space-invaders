@@ -4,7 +4,7 @@ import './style.css';
 import { Shields } from './components/Shield/Shields';
 
 let game: Game | undefined;
-let devControls: GameOptions | undefined;
+let gameOptions: GameOptions | undefined;
 const canvasWidth = 600;
 const canvasHeight = 600;
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 shieldsOn: true,
             });
 
-            devControls = new GameOptions({ game });
+            gameOptions = new GameOptions({ game });
 
             animate();
         }
@@ -72,7 +72,7 @@ const handleReset = () => {
                 game.shields = currentShields;
                 game.defender.x = currentPlayerX;
 
-                if (devControls) devControls.props.game = game;
+                if (gameOptions) gameOptions.props.game = game;
 
                 animate();
             }
@@ -86,6 +86,11 @@ const animate = () => {
 
     if (game?.gameService.isGameOver) {
         game?.gameService.drawGameOver();
+
+        if (game.gameService.gameOverMessage !== 'You win!') {
+            gameOptions?.saveHighscore();
+        }
+
         return;
     }
     requestAnimationFrame(animate);

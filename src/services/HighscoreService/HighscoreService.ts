@@ -49,4 +49,24 @@ export class HighscoreService {
             console.error(error);
         }
     };
+
+    onSaveHighscore = async (name: string, score: number) => {
+        const data = {
+            playerName: name,
+            scoreValue: score,
+        };
+
+        try {
+            await fetch(this.apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        console.log('Save highscore button clicked: ', name, score);
+    };
 }
