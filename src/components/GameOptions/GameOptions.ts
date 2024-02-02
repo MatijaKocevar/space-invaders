@@ -1,4 +1,5 @@
 import { HighscoreService } from '../../services/HighscoreService/HighscoreService';
+import { changeLog } from '../ChangeLog/ChangeLog';
 import { IGameControls } from './entitites/IGameControls.interface';
 
 export class GameOptions {
@@ -129,6 +130,8 @@ export class GameOptions {
 
     onChangeLogButtonClick = () => {
         console.log('Change log button clicked');
+
+        this.showPopup(changeLog());
     };
 
     saveHighscore = () => {

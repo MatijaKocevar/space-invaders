@@ -69,4 +69,17 @@ export class GameService {
     setGameOverMessage = (message: string) => {
         this.gameOverMessage = message;
     };
+
+    drawInstructions = () => {
+        const { context, gameWidth } = this.props.game.props;
+
+        drawText(context, {
+            alignment: 'center',
+            fillStyle: 'white',
+            font: '12px Arial',
+            text: 'A/D to move, Space to shoot',
+            x: gameWidth / 2,
+            y: 20,
+        });
+    };
 }
