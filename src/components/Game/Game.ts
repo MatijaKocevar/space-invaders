@@ -83,7 +83,7 @@ export class Game {
         this.explosions.draw();
         if (this.shieldsOn) this.shields.draw();
 
-        this.gameService.drawInstructions();
+        if (window.innerWidth > 600) this.gameService.drawInstructions();
         this.scoreService.drawHighscore();
         this.livesService.drawLives();
     };
