@@ -6,6 +6,43 @@ body {
     background-color: rgb(44, 44, 44);
 }
 
+.popup-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+
+    .popup {
+        background-color: #fff;
+        padding: 0 1rem 1rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+
+        .close-button {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-self: flex-end;
+            background-color: transparent;
+            border: none;
+            position: relative;
+            top: -0px;
+            right: -10px;
+        }
+    }
+}
+
 #app {
     display: flex;
     width: 100%;
