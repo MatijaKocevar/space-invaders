@@ -5,10 +5,10 @@ This project is a clone of the classic Space Invader game, developed using TypeS
 
 ## Installation
 To install and run the game, follow these steps:
-1. Clone the repository: `git clone [your-repo-link]`
-2. Navigate to the project directory: `cd [project-directory]`
+1. Clone the repository: `git clone https://github.com/MatijaKocevar/space-invaders.git`
+2. Navigate to the project directory: `cd space-invaders`
 3. Install dependencies: `npm install`
-4. Run the game: `npm dev`
+4. Run the game: `npm run dev`
 
 ## Usage
 To play the game:
