@@ -91,6 +91,11 @@ export class GameOptions {
     };
 
     showPopup = (element: HTMLElement) => {
+        const existingPopup = document.querySelector('.popup-wrapper');
+        if (existingPopup) {
+            document.body.removeChild(existingPopup);
+        }
+
         const popupWrapper = document.createElement('div');
         popupWrapper.classList.add('popup-wrapper');
 
@@ -127,20 +132,48 @@ export class GameOptions {
         });
     };
 
-    onHighscoreButtonClick = async () => {
-        const highscoreElement =
-            await this.highscoreService.getHighscoreElement();
+    showLoadingPopup = () => {
+        const popup = document.createElement('div');
+        popup.classList.add('loading-popup');
 
-        this.showPopup(highscoreElement);
+        const loadingContainer = document.createElement('div');
+        loadingContainer.classList.add('loading-container');
+        loadingContainer.appendChild(popup);
+
+        const loadingText = document.createElement('div');
+        loadingText.textContent = 'Loading...';
+        loadingText.classList.add('loading-text');
+        loadingContainer.appendChild(loadingText);
+
+        this.showPopup(loadingContainer);
+        return loadingContainer;
+    };
+
+    onHighscoreButtonClick = async () => {
+        this.showLoadingPopup();
+
+        try {
+            const highscoreElement =
+                await this.highscoreService.getHighscoreElement();
+            this.showPopup(highscoreElement);
+        } catch (error) {
+            console.error('Failed to load highscores:', error);
+            const errorElement = document.createElement('div');
+            errorElement.textContent =
+                'Failed to load highscores. Please try again.';
+            errorElement.classList.add('error-message');
+            this.showPopup(errorElement);
+        }
     };
 
     onChangeLogButtonClick = () => {
-        console.log('Change log button clicked');
-
         this.showPopup(changeLog());
     };
 
     saveHighscore = () => {
+        const container = document.createElement('div');
+        container.classList.add('highscore-container');
+
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = 'Enter your name';
@@ -150,36 +183,40 @@ export class GameOptions {
         saveButton.textContent = 'Save';
         saveButton.classList.add('save-button');
 
-        const saveFunction = () => {
+        const saveFunction = async () => {
             const name = input.value;
             const { game } = this.props;
 
             if (name) {
                 const score = game.scoreService.score;
+                this.showLoadingPopup();
 
-                this.highscoreService.onSaveHighscore(name, score);
-                document.body.removeChild(
-                    document.querySelector('.popup-wrapper')!
-                );
-
-                document.body.classList.remove('no-scroll');
+                try {
+                    await this.highscoreService.onSaveHighscore(name, score);
+                    document.body.removeChild(
+                        document.querySelector('.popup-wrapper')!
+                    );
+                    document.body.classList.remove('no-scroll');
+                } catch (error) {
+                    console.error('Failed to save highscore:', error);
+                    const errorElement = document.createElement('div');
+                    errorElement.textContent =
+                        'Failed to save highscore. Please try again.';
+                    errorElement.classList.add('error-message');
+                    this.showPopup(errorElement);
+                }
             } else {
                 alert('Please enter a name.');
             }
         };
 
         saveButton.addEventListener('click', saveFunction);
-
-        input.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                saveFunction();
-            }
+        input.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') saveFunction();
         });
 
-        const container = document.createElement('div');
         container.appendChild(input);
         container.appendChild(saveButton);
-
         this.showPopup(container);
     };
 
