@@ -1,5 +1,9 @@
 # Space Invader Clone in TypeScript
 
+## Prerequisites
+- Node.js (version 16 or higher)
+- npm (Node Package Manager)
+
 ## Description
 This project is a clone of the classic Space Invader game, developed using TypeScript.
 
