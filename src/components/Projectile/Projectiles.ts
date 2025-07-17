@@ -51,12 +51,17 @@ export class Projectiles {
             this.invaderProjectilesToRemove.length > 0 ||
             this.defenderProjectilesToRemove.length > 0
         ) {
-            this.defenderProjectilesToRemove?.forEach((projectile) =>
-                this.defender.splice(projectile.index, 1)
-            );
-            this.invaderProjectilesToRemove.forEach((projectile) =>
-                this.invader.splice(projectile.index, 1)
-            );
+            // Remove projectiles in reverse order to avoid index shifting issues
+            this.defenderProjectilesToRemove
+                ?.sort((a, b) => b.index - a.index)
+                .forEach((projectile) =>
+                    this.defender.splice(projectile.index, 1)
+                );
+            this.invaderProjectilesToRemove
+                .sort((a, b) => b.index - a.index)
+                .forEach((projectile) =>
+                    this.invader.splice(projectile.index, 1)
+                );
         }
     };
 }

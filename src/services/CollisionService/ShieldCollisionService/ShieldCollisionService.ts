@@ -68,13 +68,18 @@ export class ShieldCollisionService {
             }
         });
 
-        defenderProjectilesToRemove?.forEach((projectile) =>
-            projectiles.defender.splice(projectile.index, 1)
-        );
+        // Remove projectiles in reverse order to avoid index shifting issues
+        defenderProjectilesToRemove
+            ?.sort((a, b) => b.index - a.index)
+            .forEach((projectile) =>
+                projectiles.defender.splice(projectile.index, 1)
+            );
 
-        invaderProjectilesToRemove.forEach((projectile) =>
-            projectiles.invader.splice(projectile.index, 1)
-        );
+        invaderProjectilesToRemove
+            .sort((a, b) => b.index - a.index)
+            .forEach((projectile) =>
+                projectiles.invader.splice(projectile.index, 1)
+            );
     }
 
     collideWithShield(
