@@ -5,7 +5,7 @@ import mkcert from 'vite-plugin-mkcert';
 export default () => {
     return defineConfig({
         base: '/space-invaders/',
-        plugins: [eslintPlugin(), mkcert()],
+        plugins: [eslintPlugin()],
         server: {
             host: true,
             cors: true,

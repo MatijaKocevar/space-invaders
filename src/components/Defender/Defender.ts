@@ -12,7 +12,7 @@ export class Defender {
     y: number;
     speed: number;
     maxSpeed: number;
-    timeout: NodeJS.Timeout = setTimeout(() => {}, 0);
+    timeout: any = setTimeout(() => {}, 0);
     reload = false;
     image: HTMLImageElement;
     explosionImage: HTMLImageElement;

@@ -33,9 +33,9 @@ export class Invader {
         if (direction === 'left') this.moveLeft();
         if (direction === 'right') this.moveRight();
 
-        // Update animation timer and frame
+        // Update animation timer and frame - animate every 0.5 seconds (30 frames at 60fps)
         this.animationTimer += deltaTime;
-        const animationInterval = this.props.animationSpeed / 60; // Convert to seconds
+        const animationInterval = 0.5; // 0.5 seconds - much faster than movement
         
         if (this.animationTimer >= animationInterval) {
             this.frame = this.frame > 0 ? 0 : 1;
