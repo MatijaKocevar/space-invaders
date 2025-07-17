@@ -16,6 +16,7 @@ export class Invaders {
     invader3_4 = new Image();
     animationSpeed = 70;
     animationTimer = 0;
+    projectileTimer = 0;
     livingInvaders: Invader[] = [];
     speed = 5;
     currentDirection: 'left' | 'right';
@@ -135,9 +136,10 @@ export class Invaders {
         let speedChanged = false;
         
         // Convert frame-based animation speed to time-based (animationSpeed frames at 60fps)
-        const animationInterval = this.animationSpeed / 60;
+        const movementInterval = this.animationSpeed / 60;
         
         this.animationTimer += deltaTime;
+        this.projectileTimer += deltaTime;
 
         if (this.animationSpeed > 0) {
             if (
@@ -195,10 +197,10 @@ export class Invaders {
             }
         }
 
-        // Update the invader direction and position based on animation interval
+        // Update the invader direction and position based on movement interval
         if (
             this.livingInvaders.length > 0 &&
-            this.animationTimer >= animationInterval
+            this.animationTimer >= movementInterval
         ) {
             this.updateDirection();
             this.livingInvaders.forEach((invader) => {
@@ -214,25 +216,26 @@ export class Invaders {
             this.animationTimer = 0;
         }
 
-        // Fire a projectile if the invader is alive and based on animation interval
-        // This uses the same timing as movement but doesn't reset the timer
+        // Fire a projectile based on a separate timer
+        // Original logic: fire when gameFrame % animationSpeed === 0 AND gameFrame % 25 === 0
+        // This means fire roughly every 25 animation intervals
+        const projectileInterval = (this.animationSpeed * 25) / 60; // Convert to seconds
+        
         if (
             this.livingInvaders.length > 0 &&
-            this.animationTimer >= animationInterval
+            this.projectileTimer >= projectileInterval
         ) {
             const randomInvader = Math.floor(
                 Math.random() * this.livingInvaders.length
             );
 
-            // Fire projectile less frequently - approximately every 25 animation cycles
-            if (
-                Math.random() < 0.04 && // Roughly 1/25 chance per animation cycle
-                game.projectiles.invader.length < 3
-            ) {
+            if (game.projectiles.invader.length < 3) {
                 game.projectiles.invader.push(
                     this.livingInvaders[randomInvader].fire()
                 );
             }
+            
+            this.projectileTimer = 0;
         }
 
         if (this.livingInvaders.some((invader) => invader.props.y > 550)) {
