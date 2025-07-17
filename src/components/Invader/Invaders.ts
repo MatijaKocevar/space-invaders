@@ -139,7 +139,7 @@ export class Invaders {
         
         this.animationTimer += deltaTime;
 
-        if (this.animationTimer >= 0) {
+        if (this.animationSpeed > 0) {
             if (
                 invadersArrayLength < 44 &&
                 this.animationSpeed != 35 &&
@@ -215,6 +215,7 @@ export class Invaders {
         }
 
         // Fire a projectile if the invader is alive and based on animation interval
+        // This uses the same timing as movement but doesn't reset the timer
         if (
             this.livingInvaders.length > 0 &&
             this.animationTimer >= animationInterval

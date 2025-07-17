@@ -19,7 +19,6 @@ export class Defender {
     lives = 3;
     previousAnimationSpeed = 0;
     isCollided = false;
-    collisionPause = 0;
     collisionTimer = 0;
     frame = 0;
     animationTimer = 0;
@@ -71,11 +70,9 @@ export class Defender {
             this.props.game.invaders.animationSpeed =
                 this.previousAnimationSpeed;
             this.collisionTimer = 0;
-            this.collisionPause = 0;
         }
 
         if (this.isCollided) {
-            this.collisionPause++;
             context.drawImage(
                 this.explosionImage,
                 this.frame * this.spriteWidth,
