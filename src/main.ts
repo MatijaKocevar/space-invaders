@@ -7,6 +7,7 @@ let game: Game | undefined;
 let gameOptions: GameOptions | undefined;
 const canvasWidth = 600;
 const canvasHeight = 600;
+let lastTime = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -80,8 +81,15 @@ const handleReset = () => {
     }
 };
 
-const animate = () => {
-    game?.update();
+const animate = (currentTime: number = 0) => {
+    // Calculate delta time in seconds
+    const deltaTime = lastTime ? (currentTime - lastTime) / 1000 : 0;
+    lastTime = currentTime;
+    
+    // Cap delta time to prevent huge jumps (e.g., when tab is inactive)
+    const clampedDeltaTime = Math.min(deltaTime, 0.1);
+    
+    game?.update(clampedDeltaTime);
     game?.draw();
 
     if (game?.gameService.isGameOver) {

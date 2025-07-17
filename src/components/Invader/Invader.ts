@@ -7,6 +7,7 @@ export class Invader {
     spriteWidth: number;
     spriteHeight: number;
     frame = 0;
+    animationTimer = 0;
     currentDirection: 'left' | 'right' = 'right';
     invaderDeath: HTMLAudioElement;
 
@@ -23,9 +24,7 @@ export class Invader {
 
     moveDown = () => (this.props.y += this.props.height);
 
-    updateInvader = (direction: 'left' | 'right') => {
-        const { gameFrame } = this.props.game;
-
+    updateInvader = (direction: 'left' | 'right', deltaTime: number) => {
         if (this.currentDirection != direction) {
             this.moveDown();
             this.currentDirection = direction;
@@ -34,8 +33,13 @@ export class Invader {
         if (direction === 'left') this.moveLeft();
         if (direction === 'right') this.moveRight();
 
-        if (gameFrame % this.props.animationSpeed === 0) {
-            this.frame > 0 ? (this.frame = 0) : this.frame++;
+        // Update animation timer and frame
+        this.animationTimer += deltaTime;
+        const animationInterval = this.props.animationSpeed / 60; // Convert to seconds
+        
+        if (this.animationTimer >= animationInterval) {
+            this.frame = this.frame > 0 ? 0 : 1;
+            this.animationTimer = 0;
         }
     };
 

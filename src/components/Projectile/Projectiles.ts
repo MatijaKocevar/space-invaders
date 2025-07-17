@@ -16,11 +16,11 @@ export class Projectiles {
         this.invaderProjectilesToRemove = [];
     }
 
-    update = () => {
+    update = (deltaTime: number) => {
         this.checkOutOfBounds();
 
-        this.defender.forEach((projectile) => projectile.update());
-        this.invader.forEach((projectile) => projectile.update());
+        this.defender.forEach((projectile) => projectile.update(deltaTime));
+        this.invader.forEach((projectile) => projectile.update(deltaTime));
     };
 
     draw = () => {

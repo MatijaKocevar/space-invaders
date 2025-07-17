@@ -20,16 +20,19 @@ export class DefenderService {
         return false;
     };
 
-    animateFrame = () => {
-        const { game } = this.props;
+    animateFrame = (deltaTime: number) => {
         const { defender } = this.props.game;
-
-        if (game.gameFrame % 10 === 0) {
+        
+        defender.animationTimer += deltaTime;
+        
+        // Animation frame change every 0.1 seconds (100ms)
+        if (defender.animationTimer >= 0.1) {
             defender.frame = defender.frame > 0 ? 0 : 1;
+            defender.animationTimer = 0;
         }
     };
 
-    handleHorizontalMovement = () => {
+    handleHorizontalMovement = (deltaTime: number) => {
         const { inputHandler } = this.props.game;
         const { defender } = this.props.game;
 
@@ -42,7 +45,8 @@ export class DefenderService {
                 defender.speed = 0;
             }
 
-            defender.x += defender.speed;
+            // Scale movement by delta time and a factor to maintain similar speeds
+            defender.x += defender.speed * deltaTime * 60;
         }
     };
 

@@ -64,10 +64,10 @@ export class Game {
         this.shields.draw();
     }
 
-    update = () => {
-        this.projectiles.update();
-        this.invaders.updateInvaders();
-        this.defender.update();
+    update = (deltaTime: number) => {
+        this.projectiles.update(deltaTime);
+        this.invaders.updateInvaders(deltaTime);
+        this.defender.update(deltaTime);
         this.collisionService.handleCollisions();
     };
 
