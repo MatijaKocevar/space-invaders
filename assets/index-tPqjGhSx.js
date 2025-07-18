@@ -3,6 +3,7 @@ var D=Object.defineProperty;var k=(r,e,t)=>e in r?D(r,e,{enumerable:!0,configura
                     <span>${n.scoreValue}</span>
                 `,e.appendChild(o)}),e});s(this,"getHighscores",async()=>{try{return await(await fetch(`${this.apiUrl}`)).json()}catch(e){console.error(e)}});s(this,"onSaveHighscore",async(e,t)=>{const i={playerName:e,scoreValue:t};try{await fetch(this.apiUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(i)})}catch(n){console.error(n)}console.log("Save highscore button clicked: ",e,t)});this.props=e}}const N=()=>{const r=document.createElement("div");r.classList.add("change-log");const e=document.createElement("h2");return e.textContent="Change Log",r.innerHTML=`
         <span class='change-log-item'>- Fixed mobile control getting stuck. Update game sizing</span>
+        <span class='change-log-item'>- Implement delta time calculation.</span>
         <span class='change-log-item'>- Updated api urls.</span>
         <span class='change-log-item'>- Scores get stored and can be looked up.</span>
 		<span class='change-log-item'>- Added sounds for player death, invader death, shooting.</span>
