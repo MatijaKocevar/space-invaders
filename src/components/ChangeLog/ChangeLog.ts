@@ -6,6 +6,7 @@ export const changeLog = () => {
     title.textContent = 'Change Log';
 
     changeLogWrapper.innerHTML = `
+        <span class='change-log-item'>- Fixed mobile control getting stuck. Update game sizing</span>
         <span class='change-log-item'>- Updated api urls.</span>
         <span class='change-log-item'>- Scores get stored and can be looked up.</span>
 		<span class='change-log-item'>- Added sounds for player death, invader death, shooting.</span>
