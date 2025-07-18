@@ -78,11 +78,14 @@ const handleReset = () => {
                 let currentScore = game.scoreService.score;
                 let currentShields = game.shields;
                 let currentPlayerX = game.defender.x;
+                const currentPlaySound = game.playSound;
+                let currentLives = game.defender.lives;
 
                 if (game.gameService.gameOverMessage !== 'You win!') {
                     currentScore = 0;
                     currentShields = new Shields({ game });
                     currentPlayerX = 50;
+                    currentLives = 3;
                 }
 
                 game.destroy();
@@ -98,6 +101,8 @@ const handleReset = () => {
                 game.scoreService.score = currentScore;
                 game.shields = currentShields;
                 game.defender.x = currentPlayerX;
+                game.defender.lives = currentLives;
+                game.playSound = currentPlaySound;
 
                 if (gameOptions) gameOptions.props.game = game;
 

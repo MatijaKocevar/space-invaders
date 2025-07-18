@@ -6,7 +6,8 @@ export const changeLog = () => {
     title.textContent = 'Change Log';
 
     changeLogWrapper.innerHTML = `
-        <span class='change-log-item'>- Fixed mobile control getting stuck. Update game sizing</span>
+        <span class='change-log-item'>- Fix sounds not working after win. Fix lives reseting after win.</span>
+        <span class='change-log-item'>- Fixed mobile control getting stuck. Update game sizing.</span>
         <span class='change-log-item'>- Implement delta time calculation.</span>
         <span class='change-log-item'>- Updated api urls.</span>
         <span class='change-log-item'>- Scores get stored and can be looked up.</span>
