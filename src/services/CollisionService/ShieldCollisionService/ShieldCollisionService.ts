@@ -25,6 +25,7 @@ export class ShieldCollisionService {
                 maxY,
                 true
             );
+            
             if (isCollided) {
                 defenderProjectilesToRemove.push({ index: i });
                 shields.drawParticles();
@@ -44,6 +45,7 @@ export class ShieldCollisionService {
                 maxY,
                 true
             );
+            
             if (isCollided) {
                 invaderProjectilesToRemove.push({ index: i });
                 shields.drawParticles();
@@ -87,10 +89,14 @@ export class ShieldCollisionService {
         const { shields } = this.props.game;
         let isCollided = false;
 
-        for (let x = minX; x <= maxX; x++) {
-            for (let y = minY; y <= maxY; y++) {
+        const roundedMinX = Math.floor(minX);
+        const roundedMaxX = Math.ceil(maxX);
+        const roundedMinY = Math.floor(minY);
+        const roundedMaxY = Math.ceil(maxY);
+
+        for (let x = roundedMinX; x <= roundedMaxX; x++) {
+            for (let y = roundedMinY; y <= roundedMaxY; y++) {
                 const key = `${x}x${y}`;
-                // Check if the particle exists
                 if (shields.allParticles[key]) {
                     shields.allParticles[key] = false;
                     isCollided = true;
@@ -99,10 +105,10 @@ export class ShieldCollisionService {
         }
 
         if (isCollided && blast) {
-            const minXBlast = minX - shields.explosionRadius;
-            const maxXBlast = maxX + shields.explosionRadius;
-            const minYBlast = minY - shields.explosionHeight;
-            const maxYBlast = maxY + shields.explosionHeight;
+            const minXBlast = roundedMinX - shields.explosionRadius;
+            const maxXBlast = roundedMaxX + shields.explosionRadius;
+            const minYBlast = roundedMinY - shields.explosionHeight;
+            const maxYBlast = roundedMaxY + shields.explosionHeight;
 
             for (let x = minXBlast; x <= maxXBlast; x++) {
                 for (let y = minYBlast; y <= maxYBlast; y++) {

@@ -20,6 +20,8 @@ export class Invaders {
     currentDirection: 'left' | 'right';
     moveSounds: { [key: string]: HTMLAudioElement };
     moveCount = 0;
+    timeSinceLastMove = 0;
+    moveInterval = 1167; 
 
     constructor(props: IInvaders) {
         this.props = props;
@@ -93,7 +95,6 @@ export class Invaders {
             }
 
             if (i < 33 && i >= 11) {
-                // second and thrird row from top
                 const invader = new Invader({
                     x: invaderX,
                     y: invaderY,
@@ -109,7 +110,6 @@ export class Invaders {
             }
 
             if (i < 55 && i >= 33) {
-                // fourth and fifth row from top
                 const invader = new Invader({
                     x: invaderX,
                     y: invaderY,
@@ -128,7 +128,7 @@ export class Invaders {
         this.livingInvaders = invaders;
     };
 
-    updateInvaders = () => {
+    updateInvaders = (deltaTime: number) => {
         const { game } = this.props;
         const invadersArrayLength = this.livingInvaders.length;
         let speedChanged = false;
@@ -141,6 +141,7 @@ export class Invaders {
             ) {
                 this.speed = 6;
                 this.animationSpeed = 35;
+                this.moveInterval = 583; 
                 speedChanged = true;
             }
             if (
@@ -150,6 +151,7 @@ export class Invaders {
             ) {
                 this.speed = 7;
                 this.animationSpeed = 20;
+                this.moveInterval = 333;
                 speedChanged = true;
             }
             if (
@@ -159,15 +161,17 @@ export class Invaders {
             ) {
                 this.speed = 8;
                 this.animationSpeed = 10;
+                this.moveInterval = 167;
                 speedChanged = true;
             }
             if (
                 invadersArrayLength < 11 &&
                 this.animationSpeed != 8 &&
-                this.speed != 10
+                this.speed != 9
             ) {
-                this.speed = 10;
+                this.speed = 9;
                 this.animationSpeed = 8;
+                this.moveInterval = 133; 
                 speedChanged = true;
             }
             if (
@@ -177,6 +181,7 @@ export class Invaders {
             ) {
                 this.speed = 20;
                 this.animationSpeed = 4;
+                this.moveInterval = 67; 
                 speedChanged = true;
             }
 
@@ -189,10 +194,11 @@ export class Invaders {
             }
         }
 
-        // Update the invader direction and position
+        this.timeSinceLastMove += deltaTime;
+
         if (
             this.livingInvaders.length > 0 &&
-            game.gameFrame % this.animationSpeed === 0
+            this.timeSinceLastMove >= this.moveInterval
         ) {
             this.updateDirection();
             this.livingInvaders.forEach((invader) => {
@@ -204,9 +210,10 @@ export class Invaders {
 
             if (game.playSound)
                 this.moveSounds[this.moveCount.toString()].play();
+
+            this.timeSinceLastMove = 0; // Reset timer
         }
 
-        // Fire a projectile if the invader is alive and the game frame is a multiple of the animation speed
         if (
             this.livingInvaders.length > 0 &&
             game.gameFrame % this.animationSpeed === 0
@@ -238,6 +245,7 @@ export class Invaders {
 
             this.speed = 6;
             this.animationSpeed = 35;
+            this.moveInterval = 583;
         }
     };
 
@@ -248,5 +256,6 @@ export class Invaders {
     destroy = () => {
         this.invadersCount = 0;
         this.livingInvaders = [];
+        this.timeSinceLastMove = 0;
     };
 }

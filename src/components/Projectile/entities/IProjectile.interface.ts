@@ -9,4 +9,6 @@ export interface IProjectile {
     color: string;
     direction: 'up' | 'down';
     game: Game;
+    previousX?: number;
+    previousY?: number;
 }

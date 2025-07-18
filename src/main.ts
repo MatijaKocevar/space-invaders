@@ -7,6 +7,7 @@ let game: Game | undefined;
 let gameOptions: GameOptions | undefined;
 const canvasWidth = 600;
 const canvasHeight = 600;
+let lastTime = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -74,14 +75,23 @@ const handleReset = () => {
 
                 if (gameOptions) gameOptions.props.game = game;
 
+                lastTime = 0; // Reset timing for new game
                 animate();
             }
         }
     }
 };
 
-const animate = () => {
-    game?.update();
+const animate = (currentTime: number = 0) => {
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    // Cap deltaTime to prevent large jumps and normalize to 60 FPS
+    const clampedDeltaTime = Math.min(deltaTime, 33.33); // Max 33.33ms (30 FPS minimum)
+    
+    if (clampedDeltaTime > 0) {
+        game?.update(clampedDeltaTime);
+    }
     game?.draw();
 
     if (game?.gameService.isGameOver) {

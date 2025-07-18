@@ -29,11 +29,13 @@ export class DefenderService {
         }
     };
 
-    handleHorizontalMovement = () => {
+    handleHorizontalMovement = (deltaTime: number) => {
         const { inputHandler } = this.props.game;
         const { defender } = this.props.game;
 
         if (defender.isCollided === false) {
+            const speedMultiplier = deltaTime / 16.67; 
+            
             if (inputHandler.keys.includes('KeyD')) {
                 defender.speed = defender.maxSpeed;
             } else if (inputHandler.keys.includes('KeyA')) {
@@ -42,7 +44,7 @@ export class DefenderService {
                 defender.speed = 0;
             }
 
-            defender.x += defender.speed;
+            defender.x += defender.speed * speedMultiplier;
         }
     };
 

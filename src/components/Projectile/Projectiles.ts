@@ -16,11 +16,11 @@ export class Projectiles {
         this.invaderProjectilesToRemove = [];
     }
 
-    update = () => {
+    update = (deltaTime: number) => {
         this.checkOutOfBounds();
 
-        this.defender.forEach((projectile) => projectile.update());
-        this.invader.forEach((projectile) => projectile.update());
+        this.defender.forEach((projectile) => projectile.update(deltaTime));
+        this.invader.forEach((projectile) => projectile.update(deltaTime));
     };
 
     draw = () => {
@@ -33,14 +33,12 @@ export class Projectiles {
         this.defenderProjectilesToRemove = [];
         this.invaderProjectilesToRemove = [];
 
-        // Chech if playerProjectiles go off the screen
         this.defender.forEach((projectile, i) => {
             if (projectile.props.y < 0) {
                 this.defenderProjectilesToRemove.push({ index: i });
             }
         });
 
-        // Chech if invaderProjectiles go off the screen
         this.invader.forEach((projectile, i) => {
             if (projectile.props.y > gameHeight) {
                 this.invaderProjectilesToRemove.push({ index: i });

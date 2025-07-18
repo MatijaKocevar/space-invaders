@@ -24,8 +24,6 @@ export class Invader {
     moveDown = () => (this.props.y += this.props.height);
 
     updateInvader = (direction: 'left' | 'right') => {
-        const { gameFrame } = this.props.game;
-
         if (this.currentDirection != direction) {
             this.moveDown();
             this.currentDirection = direction;
@@ -34,9 +32,7 @@ export class Invader {
         if (direction === 'left') this.moveLeft();
         if (direction === 'right') this.moveRight();
 
-        if (gameFrame % this.props.animationSpeed === 0) {
-            this.frame > 0 ? (this.frame = 0) : this.frame++;
-        }
+        this.frame > 0 ? (this.frame = 0) : this.frame++;
     };
 
     fire = () => {

@@ -13,6 +13,8 @@ import { CollisionService } from '../../services/CollisionService/CollisionServi
 export class Game {
     props: IGame;
     gameFrame = 0;
+    deltaTime = 0;
+    accumulatedTime = 0;
     inputHandler: InputHandler;
     defender: Defender;
     invaders: Invaders;
@@ -23,7 +25,6 @@ export class Game {
     godMode;
     shieldsOn;
 
-    //services
     gameService: GameService;
     livesService: LivesService;
     scoreService: ScoreService;
@@ -42,7 +43,6 @@ export class Game {
         this.projectiles = new Projectiles({ game: this });
         this.explosions = new Explosions({ game: this });
 
-        //services
         this.gameService = new GameService({
             game: this,
         });
@@ -64,10 +64,19 @@ export class Game {
         this.shields.draw();
     }
 
-    update = () => {
-        this.projectiles.update();
-        this.invaders.updateInvaders();
-        this.defender.update();
+    update = (deltaTime: number) => {
+        this.deltaTime = deltaTime;
+        this.accumulatedTime += deltaTime;
+        
+        const frameInterval = 1000 / 60; 
+        while (this.accumulatedTime >= frameInterval) {
+            this.gameFrame++;
+            this.accumulatedTime -= frameInterval;
+        }
+        
+        this.projectiles.update(deltaTime);
+        this.invaders.updateInvaders(deltaTime);
+        this.defender.update(deltaTime);
         this.collisionService.handleCollisions();
     };
 

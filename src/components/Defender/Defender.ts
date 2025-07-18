@@ -20,6 +20,7 @@ export class Defender {
     previousAnimationSpeed = 0;
     isCollided = false;
     collisionPause = 0;
+    collisionPauseTarget = 1333; 
     frame = 0;
     spriteWidth: number;
     spriteHeight: number;
@@ -46,19 +47,23 @@ export class Defender {
         this.defenderService = new DefenderService(props);
     }
 
-    update = () => {
+    update = (deltaTime: number) => {
         if (this.defenderService.checkGameOver()) return;
 
         this.defenderService.animateFrame();
-        this.defenderService.handleHorizontalMovement();
+        this.defenderService.handleHorizontalMovement(deltaTime);
         this.defenderService.handleShooting();
         this.defenderService.preventGoingOffScreen();
+        
+        if (this.isCollided) {
+            this.collisionPause += deltaTime;
+        }
     };
 
     draw() {
         const { context } = this.props.game.props;
 
-        if (this.collisionPause > 80) {
+        if (this.collisionPause > this.collisionPauseTarget) {
             this.isCollided = false;
             this.x = 50;
             this.props.game.invaders.animationSpeed =
@@ -67,7 +72,6 @@ export class Defender {
         }
 
         if (this.isCollided) {
-            this.collisionPause++;
             context.drawImage(
                 this.explosionImage,
                 this.frame * this.spriteWidth,
