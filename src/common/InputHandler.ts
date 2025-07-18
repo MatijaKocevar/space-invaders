@@ -45,11 +45,16 @@ export class InputHandler {
         leftButton.id = 'left-button';
         leftButton.innerHTML = '&lt;';
         leftButton.addEventListener('touchstart', this.onLeftButtonTouchStart, {
-            passive: true,
+            passive: false,
         });
         leftButton.addEventListener('touchend', this.onLeftButtonTouchEnd, {
-            passive: true,
+            passive: false,
         });
+        leftButton.addEventListener('touchmove', this.preventDefaults, {
+            passive: false,
+        });
+        leftButton.addEventListener('contextmenu', this.preventDefaults);
+        leftButton.addEventListener('selectstart', this.preventDefaults);
         leftButton.addEventListener('mousedown', this.onLeftButtonTouchStart);
         leftButton.addEventListener('mouseup', this.onLeftButtonTouchEnd);
 
@@ -57,11 +62,16 @@ export class InputHandler {
         fireButton.id = 'fire-button';
         fireButton.innerHTML = 'FIRE';
         fireButton.addEventListener('touchstart', this.onFireButtonTouchStart, {
-            passive: true,
+            passive: false,
         });
         fireButton.addEventListener('touchend', this.onFireButtonTouchEnd, {
-            passive: true,
+            passive: false,
         });
+        fireButton.addEventListener('touchmove', this.preventDefaults, {
+            passive: false,
+        });
+        fireButton.addEventListener('contextmenu', this.preventDefaults);
+        fireButton.addEventListener('selectstart', this.preventDefaults);
         fireButton.addEventListener('mousedown', this.onFireButtonTouchStart);
         fireButton.addEventListener('mouseup', this.onFireButtonTouchEnd);
 
@@ -71,11 +81,16 @@ export class InputHandler {
         rightButton.addEventListener(
             'touchstart',
             this.onRightButtonTouchStart,
-            { passive: true }
+            { passive: false }
         );
         rightButton.addEventListener('touchend', this.onRightButtonTouchEnd, {
-            passive: true,
+            passive: false,
         });
+        rightButton.addEventListener('touchmove', this.preventDefaults, {
+            passive: false,
+        });
+        rightButton.addEventListener('contextmenu', this.preventDefaults);
+        rightButton.addEventListener('selectstart', this.preventDefaults);
         rightButton.addEventListener('mousedown', this.onRightButtonTouchStart);
         rightButton.addEventListener('mouseup', this.onRightButtonTouchEnd);
 
@@ -108,6 +123,11 @@ export class InputHandler {
 
     onFireButtonTouchEnd = () => {
         this.keys.splice(this.keys.indexOf('Space'), 1);
+    };
+
+    preventDefaults = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
     };
 
     destroy = () => {

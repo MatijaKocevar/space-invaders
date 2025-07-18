@@ -5,9 +5,37 @@ import { Shields } from './components/Shield/Shields';
 
 let game: Game | undefined;
 let gameOptions: GameOptions | undefined;
-const canvasWidth = 600;
-const canvasHeight = 600;
+const gameWidth = 800;
+const gameHeight = 600;
 let lastTime = 0;
+
+const setupCanvas = (canvas: HTMLCanvasElement) => {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    const gameOptionsHeight = 80;
+    
+    const mobileControlsHeight = windowWidth <= 768 ? 80 : 0;
+    
+    const availableHeight = windowHeight - gameOptionsHeight - mobileControlsHeight;
+    
+    const availableSize = Math.min(windowWidth, availableHeight);
+    
+    const canvasSize = Math.min(gameWidth, gameHeight);
+    const scale = availableSize / canvasSize;
+    
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    
+    canvas.style.width = `${canvasSize * scale}px`;
+    canvas.style.height = `${canvasSize * scale}px`;
+    
+    canvas.style.position = 'fixed';
+    canvas.style.left = '50%';
+    canvas.style.top = `${gameOptionsHeight + (availableHeight / 2)}px`;
+    canvas.style.transform = 'translate(-50%, -50%)';
+    canvas.style.zIndex = '1';
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
@@ -16,14 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         const context = canvas.getContext('2d');
 
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        setupCanvas(canvas);
 
         if (context) {
             game = new Game({
                 context,
-                gameWidth: canvasWidth,
-                gameHeight: canvasHeight,
+                gameWidth: Math.min(gameWidth, gameHeight),
+                gameHeight: Math.min(gameWidth, gameHeight),
                 godMode: false,
                 shieldsOn: true,
             });
@@ -45,8 +72,7 @@ const handleReset = () => {
         if (canvas) {
             const context = canvas.getContext('2d');
 
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
+            setupCanvas(canvas);
 
             if (context) {
                 let currentScore = game.scoreService.score;
@@ -63,8 +89,8 @@ const handleReset = () => {
 
                 game = new Game({
                     context,
-                    gameWidth: canvasWidth,
-                    gameHeight: canvasHeight,
+                    gameWidth: Math.min(gameWidth, gameHeight),
+                    gameHeight: Math.min(gameWidth, gameHeight),
                     godMode: game.godMode,
                     shieldsOn: game.shieldsOn,
                 });
@@ -75,7 +101,7 @@ const handleReset = () => {
 
                 if (gameOptions) gameOptions.props.game = game;
 
-                lastTime = 0; // Reset timing for new game
+                lastTime = 0; 
                 animate();
             }
         }
@@ -86,8 +112,7 @@ const animate = (currentTime: number = 0) => {
     const deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    // Cap deltaTime to prevent large jumps and normalize to 60 FPS
-    const clampedDeltaTime = Math.min(deltaTime, 33.33); // Max 33.33ms (30 FPS minimum)
+    const clampedDeltaTime = Math.min(deltaTime, 33.33); 
     
     if (clampedDeltaTime > 0) {
         game?.update(clampedDeltaTime);
@@ -108,4 +133,11 @@ const animate = (currentTime: number = 0) => {
 
 window.addEventListener('beforeunload', () => {
     game?.destroy();
+});
+
+window.addEventListener('resize', () => {
+    const canvas = document.querySelector('#game-canvas') as HTMLCanvasElement;
+    if (canvas) {
+        setupCanvas(canvas);
+    }
 });
