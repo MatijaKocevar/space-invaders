@@ -9,6 +9,26 @@ export class HighscoreService {
         this.props = props;
     }
 
+    private obfuscateScore = (score: number): string => {
+        const timestamp = Date.now();
+        const scrambled = (score * 7919 + timestamp) ^ 0xabcdef;
+        return btoa(`${scrambled}:${timestamp}:${score.toString(36)}`);
+    };
+
+    private generateFingerprint = (name: string, score: number): string => {
+        const userAgent = navigator.userAgent;
+        const screenData = `${screen.width}x${screen.height}`;
+        const combined = `${name}${score}${userAgent}${screenData}${Date.now()}`;
+
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+            const char = combined.charCodeAt(i);
+            hash = (hash << 5) - hash + char;
+            hash = hash & hash;
+        }
+        return Math.abs(hash).toString(36);
+    };
+
     getHighscoreElement = async () => {
         const highscoreElement = document.createElement('div');
         highscoreElement.classList.add('highscores');
@@ -51,9 +71,13 @@ export class HighscoreService {
     };
 
     onSaveHighscore = async (name: string, score: number) => {
+        const payload = this.obfuscateScore(score);
+        const fingerprint = this.generateFingerprint(name, score);
+
         const data = {
             playerName: name,
-            scoreValue: score,
+            payload: payload,
+            fingerprint: fingerprint,
         };
 
         try {
