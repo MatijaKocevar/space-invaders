@@ -20,11 +20,13 @@ export class Defender {
     previousAnimationSpeed = 0;
     isCollided = false;
     collisionPause = 0;
-    collisionPauseTarget = 1333; 
+    collisionPauseTarget = 1333;
     frame = 0;
     spriteWidth: number;
     spriteHeight: number;
     defenderDeath: HTMLAudioElement;
+    timeSinceLastFrame = 0;
+    frameInterval = 167;
 
     defenderService: DefenderService;
 
@@ -50,11 +52,11 @@ export class Defender {
     update = (deltaTime: number) => {
         if (this.defenderService.checkGameOver()) return;
 
-        this.defenderService.animateFrame();
+        this.defenderService.animateFrame(deltaTime);
         this.defenderService.handleHorizontalMovement(deltaTime);
         this.defenderService.handleShooting();
         this.defenderService.preventGoingOffScreen();
-        
+
         if (this.isCollided) {
             this.collisionPause += deltaTime;
         }

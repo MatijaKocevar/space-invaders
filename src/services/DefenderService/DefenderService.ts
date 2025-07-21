@@ -20,12 +20,14 @@ export class DefenderService {
         return false;
     };
 
-    animateFrame = () => {
-        const { game } = this.props;
+    animateFrame = (deltaTime: number) => {
         const { defender } = this.props.game;
 
-        if (game.gameFrame % 10 === 0) {
+        defender.timeSinceLastFrame += deltaTime;
+
+        if (defender.timeSinceLastFrame >= defender.frameInterval) {
             defender.frame = defender.frame > 0 ? 0 : 1;
+            defender.timeSinceLastFrame = 0;
         }
     };
 
@@ -34,8 +36,8 @@ export class DefenderService {
         const { defender } = this.props.game;
 
         if (defender.isCollided === false) {
-            const speedMultiplier = deltaTime / 16.67; 
-            
+            const speedMultiplier = deltaTime / 16.67;
+
             if (inputHandler.keys.includes('KeyD')) {
                 defender.speed = defender.maxSpeed;
             } else if (inputHandler.keys.includes('KeyA')) {
