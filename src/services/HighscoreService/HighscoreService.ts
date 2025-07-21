@@ -10,7 +10,7 @@ export class HighscoreService {
     }
 
     private obfuscateScore = (score: number): string => {
-        const timestamp = Date.now();
+        const timestamp = Date.now() % 1000000;
         const scrambled = (score * 7919 + timestamp) ^ 0xabcdef;
         return btoa(`${scrambled}:${timestamp}:${score.toString(36)}`);
     };
@@ -91,6 +91,5 @@ export class HighscoreService {
         } catch (error) {
             console.error(error);
         }
-        console.log('Save highscore button clicked: ', name, score);
     };
 }
